@@ -51,7 +51,6 @@
       transition: background 0.3s;
     }
     .logo {
-      /* 保持你原有LOGO样式 */
       font-weight: 800;
       font-size: 1.2em;
       letter-spacing: 1.5px;
@@ -61,7 +60,7 @@
       display: flex;
       align-items: center;
       height: 56px;
-      color: #fff;
+      color: #101010;
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
     }
     .logo a {
@@ -69,36 +68,6 @@
       text-decoration: none;
       display: inline-block;
       padding: 0.2em 0;
-    }
-    .time-bar {
-      /* 保持你原有时间栏样式 */
-      position: fixed;
-      top: 18px;
-      right: 32px;
-      display: flex;
-      flex-direction: row;
-      gap: 1.2em;
-      font-size: 1em;
-      color: #fff;
-      z-index: 100;
-      font-family: "DengXian Light", "Segoe UI", "Microsoft YaHei Light", Arial, sans-serif;
-      opacity: 0.97;
-      background: none;
-      border-radius: 0;
-      box-shadow: none;
-      border: none;
-      padding: 0;
-      backdrop-filter: none;
-    }
-    .time-bar-col {
-      min-width: 78px;
-      text-align: center;
-      letter-spacing: 1.5px;
-      font-variant-numeric: tabular-nums;
-      font-weight: 500;
-      font-size: 1.0em;
-      color: #fff;
-      text-shadow: 0 1px 2px #0003;
     }
     main {
       max-width: 680px;
@@ -148,25 +117,6 @@
       text-decoration: underline;
       color: #005be3;
     }
-    ul {
-      padding-left: 1.4em;
-      margin-bottom: 1.5em;
-    }
-    li {
-      margin-bottom: 0.7em;
-      font-size: 1.11em;
-      font-family: inherit;
-    }
-    a {
-      color: var(--blue);
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .2s, border-bottom .2s;
-    }
-    a:hover {
-      color: #005be3;
-      border-bottom: 1px solid var(--blue);
-    }
     .note {
       color: var(--gray-dark);
       font-size: 0.95em;
@@ -183,6 +133,48 @@
       letter-spacing: 1px;
       border-top: 1px solid var(--gray);
       box-shadow: none;
+    }
+    .footer-links {
+      font-size: 0.99em;
+      font-family: "Microsoft YaHei", "微软雅黑", "Segoe UI", Arial, sans-serif;
+      color: var(--gray-dark);
+      text-align: center;
+      margin-bottom: 1.2em;
+      letter-spacing: 0.3px;
+    }
+    .footer-links ul {
+      padding-left: 0;
+      list-style: none;
+      margin: 0.4em 0;
+    }
+    .footer-links li {
+      display: inline-block;
+      margin: 0 0.9em 0 0;
+      font-size: 0.99em;
+    }
+    .footer-links a {
+      color: var(--blue);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .2s, border-bottom .2s;
+      font-family: inherit;
+    }
+    .footer-links a:hover {
+      color: #005be3;
+      border-bottom: 1px solid var(--blue);
+    }
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 0.2em;
+      font-size: 0.99em;
+      color: var(--black);
+      font-family: inherit;
+    }
+    .footer-note {
+      color: var(--gray-dark);
+      font-size: 0.97em;
+      margin-top: 0.6em;
+      font-family: inherit;
     }
     /* 响应式适配 */
     @media (max-width: 900px) {
@@ -203,25 +195,10 @@
         height: 44px;
         padding-left: 6px;
       }
-      .time-bar {
-        right: 7px;
-        top: 7px;
-        font-size: 0.93em;
-        gap: 0.5em;
-      }
-      .time-bar-col {
-        min-width: 55px;
-        font-size: 0.93em;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- 右上角日期时间栏 -->
-  <div class="time-bar">
-    <div class="time-bar-col" id="beijing-date"></div>
-    <div class="time-bar-col" id="beijing-time"></div>
-  </div>
   <header>
     <div class="logo">
       <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">
@@ -239,44 +216,23 @@
       <br>
       <span style="color:var(--gray-dark);font-size:1em;font-weight:400;">该网站还在建设中，敬请期待！</span>
     </p>
-    <h2>AEOLIAN_SAND 相关网站</h2>
-    <ul>
-      <li>
-        <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
-      </li>
-      <li>
-        <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
-      </li>
-    </ul>
-    <p class="note">注：如果无法访问 GitHub 网站，属正常现象。</p>
   </main>
   <footer>
+    <div class="footer-links">
+      <div class="footer-title">相关网站</div>
+      <ul>
+        <li>
+          <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+        </li>
+        <li>
+          <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+        </li>
+      </ul>
+      <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+    </div>
     <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
   </footer>
   <script>
-    // 北京时间显示
-    function updateBeijingTime() {
-      const now = new Date();
-      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-      const bj = new Date(utc + 8 * 60 * 60000);
-
-      const year = bj.getFullYear();
-      const month = String(bj.getMonth() + 1).padStart(2, '0');
-      const day = String(bj.getDate()).padStart(2, '0');
-      const hour = String(bj.getHours()).padStart(2, '0');
-      const min = String(bj.getMinutes()).padStart(2, '0');
-      const sec = String(bj.getSeconds()).padStart(2, '0');
-
-      const dateEl = document.getElementById('beijing-date');
-      const timeEl = document.getElementById('beijing-time');
-      if (dateEl && timeEl) {
-        dateEl.innerText = `${year}-${month}-${day}`;
-        timeEl.innerText = `${hour}:${min}:${sec}`;
-      }
-    }
-    updateBeijingTime();
-    setInterval(updateBeijingTime, 1000);
-
     // 页面渐入动画
     window.addEventListener('DOMContentLoaded', function() {
       document.body.classList.add('fade-in');
