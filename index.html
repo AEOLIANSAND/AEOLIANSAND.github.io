@@ -101,7 +101,6 @@
       background: transparent;
       touch-action: pan-y;
     }
-    /* ---- 页面切换动画 ---- */
     .page {
       left: 0;
       background: transparent;
@@ -130,8 +129,6 @@
       opacity: 0;
       pointer-events: none;
     }
-
-    /* ---- 第一页：全屏居中 ---- */
     .page.fullscreen {
       position: absolute;
       top: 0;
@@ -162,7 +159,6 @@
       width: 100vw;
       pointer-events: auto;
     }
-
     .splash-text {
       margin-top: 8vh;
       margin-left: 8vw;
@@ -182,38 +178,74 @@
       margin-bottom: 0.4em;
       transition: color 0.4s;
     }
-    .cards-row {
-      width: 100vw;
+
+    /* ===== 卡片滑块相关 ===== */
+    .card-slider-outer {
       display: flex;
-      flex-direction: column;
-      gap: 36px;
       align-items: center;
       justify-content: center;
-      background: none;
+      width: 100vw;
       position: relative;
-      z-index: 2;
-      margin-bottom: 0;
-      padding-top: 4vh;
-      padding-bottom: 4vh;
+      margin-top: 7vh;
+      margin-bottom: 7vh;
     }
-    .card {
-      width: 92vw;
-      max-width: 520px;
+    .card-slider-btn {
+      background: rgba(30,32,43,0.44);
+      border: none;
+      color: #fff;
+      font-size: 2em;
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      cursor: pointer;
+      z-index: 10;
+      margin: 0 8px;
+      transition: background .2s;
+      user-select: none;
+      outline: none;
+    }
+    .card-slider-btn:active {
+      background: #4d7fff;
+      color: #fff9cc;
+    }
+    .cards-row {
+      width: 340px;
+      height: 340px;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      background: none;
+      margin-bottom: 0;
+      padding: 0;
+      touch-action: pan-x;
+    }
+    .card.slide-card {
+      flex: 0 0 320px;
+      height: 320px;
+      max-width: 90vw;
       min-width: 0;
       background: rgba(24,28,48,0.72);
-      backdrop-filter: blur(18px) saturate(170%);
-      -webkit-backdrop-filter: blur(18px) saturate(170%);
       border-radius: 18px;
       box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.16);
       border: none;
-      padding: 36px 32px 28px 32px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       box-sizing: border-box;
-      min-height: 180px;
-      margin-bottom: 10px;
+      margin-bottom: 0;
       color: #d9e0fa;
+      transition: transform .4s cubic-bezier(.7,0,.3,1), opacity .3s;
+      overflow: hidden;
+      position: absolute;
+      left: 0; top: 0;
+      background-clip: padding-box;
+      padding: 36px 32px 28px 32px;
     }
     .card-title {
       font-size: 1.26em;
@@ -321,7 +353,9 @@
     @media (max-width:700px){
       .splash-text { margin-top:4vh;margin-left:4vw;}
       .splash-line{font-size:1.5em;}
-      .card{padding:20px 4vw 18px 4vw;}
+      .cards-row { width: 190px; height: 190px; }
+      .card.slide-card { flex: 0 0 170px; height: 170px; padding: 20px 4vw 18px 4vw;}
+      .card-slider-btn { width: 32px; height: 32px; font-size: 1.5em;}
     }
   </style>
 </head>
@@ -335,27 +369,29 @@
   <div class="page-indicator" id="page-indicator"></div>
   <div class="pages-container" id="pages-container"></div>
   <script>
-    // ====== 配置所有页面内容 ======
     function getPages() {
-      // 判断是否显示彩蛋（2025-06-30及之前显示，2025-07-01及以后永久移除）
       const now = new Date();
       const deadline = new Date('2025-07-01T00:00:00+08:00');
+      // 第二页三张卡片
       const cards2 = [
-        `<div class="card">
+        `<div class="card slide-card" data-idx="0">
           <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
           <div class="card-content">该网站还在建设中，敬请期待！</div>
+        </div>`,
+        (now < deadline ? `<div class="card slide-card" data-idx="1" id="egg-card">
+          <div class="card-title" id="egg-title">彩蛋。</div>
+          <div class="card-content" id="egg-content">
+            <span class="egg-link" id="egg-link">点击此处&gt;</span>
+          </div>
+        </div>` : ''),
+        `<div class="card slide-card" data-idx="2">
+          <div class="card-title">见证历史。</div>
+          <div class="card-content">
+            2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
+            <br><br>${'<div>这是演示内容</div>'.repeat(12)}
+          </div>
         </div>`
       ];
-      if(now < deadline){
-        cards2.push(
-          `<div class="card" id="egg-card">
-            <div class="card-title" id="egg-title">彩蛋。</div>
-            <div class="card-content" id="egg-content">
-              <span class="egg-link" id="egg-link">点击此处&gt;</span>
-            </div>
-          </div>`
-        );
-      }
       return [
         // 页1
         {
@@ -370,24 +406,18 @@
         // 页2
         {
           html: `<div class="page-content-outer">
-            <div class="cards-row">
-              ${cards2.join("")}
+            <div class="card-slider-outer">
+              <button class="card-slider-btn left" id="card-btn-left">&lt;</button>
+              <div class="cards-row" id="cards-row">
+                ${cards2.join("")}
+              </div>
+              <button class="card-slider-btn right" id="card-btn-right">&gt;</button>
             </div>
           </div>`
         },
-        // 页3（内容多，footer吸底）
+        // 页3（只含footer）
         {
-          html: `<div class="page-content-outer">
-            <div class="cards-row">
-              <div class="card">
-                <div class="card-title">见证历史。</div>
-                <div class="card-content">
-                  2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
-                  <br><br>${'<div>这是演示内容</div>'.repeat(12)}
-                </div>
-              </div>
-            </div>
-          </div>`,
+          html: `<div class="page-content-outer"></div>`,
           footer: `<div class="footer-outer"><footer>
             <div class="footer-links">
               <div class="footer-title">相关网站</div>
@@ -406,6 +436,7 @@
         }
       ];
     }
+
     // ====== 页面和指示器渲染 ======
     const container = document.getElementById('pages-container');
     const indicator = document.getElementById('page-indicator');
@@ -437,7 +468,6 @@
         indicator.appendChild(dot);
       }
     }
-    // ====== 切换页面动画逻辑 ======
     let curPage = 0;
     let animating = false;
     function gotoPage(target){
@@ -486,7 +516,7 @@
     },{passive:true});
     renderDots(0);
 
-    // ====== 星空动画（中心聚集&过渡&字体自适应）======
+    // ====== 星空动画改进 ======
     let starfield = null;
     function getLuminance(r,g,b){
       r = r/255; g = g/255; b = b/255;
@@ -496,7 +526,7 @@
       return 0.2126*r + 0.7152*g + 0.0722*b;
     }
     function updatePoemColor(bgLuminance){
-      let color = bgLuminance < 0.4 ? "#fff" : "#222";
+      let color = (curPage === 0) ? "#fff" : (bgLuminance < 0.4 ? "#fff" : "#222");
       document.documentElement.style.setProperty('--splash-color', color);
     }
     class StarField {
@@ -505,23 +535,53 @@
         this.ctx = canvas.getContext('2d');
         this.mode = "center";
         this.targetMode = "center";
-        this.animationProgress = 1;
+        this.animationProgress = 0; // 0:聚集 1:散开
         this.numStars = numStars || 180;
         this.resize();
         this.createStars();
+        this.createSpreadTargets();
         this.animate();
         window.addEventListener('resize', () => {
           this.resize();
-          this.createStars();
+          this.createSpreadTargets();
         });
       }
       setMode(mode) {
-        if(mode === this.targetMode) return;
+        if(mode === this.targetMode && (mode!=="spread" || this.animationProgress===1)) return;
         this.targetMode = mode;
         this.startAnimation = performance.now();
         this.startProgress = this.animationProgress;
         this.animating = true;
+        // 每次spread都重新生成spread目标
+        if (mode === "spread") {
+          this.createSpreadTargets();
+        }
         this.animateTransition();
+      }
+      createStars() {
+        this.stars = [];
+        for(let i=0; i<this.numStars; i++){
+          let angle = Math.random()*2*Math.PI;
+          let baseRatio = Math.sqrt((i + 0.5) / this.numStars);
+          let extra = (Math.random() - 0.5) * 0.22;
+          let r = (baseRatio + extra) * this.radius * (0.97 + 0.04 * Math.random());
+          let x = this.centerX + r * Math.cos(angle);
+          let y = this.centerY + r * Math.sin(angle);
+          this.stars.push({
+            cx: x, cy: y, // 聚集初始
+            sx: x, sy: y, // spread目标
+            r: Math.random()*1.7 + 0.5,
+            speed: Math.random()*0.07 + 0.03,
+            twinkle: Math.random()*Math.PI*2,
+            opacity: Math.random()*0.8 + 0.2
+          });
+        }
+      }
+      createSpreadTargets() {
+        for(let s of this.stars){
+          s.sx = Math.random() * this.w;
+          s.sy = Math.random() * this.h;
+        }
       }
       animateTransition(){
         if(!this.animating) return;
@@ -545,25 +605,6 @@
         this.centerX = this.w/2;
         this.centerY = this.h/2;
         this.radius = Math.min(this.w,this.h) * 0.36;
-      }
-      createStars() {
-        this.stars = [];
-        for(let i=0; i<this.numStars; i++){
-          let angle = Math.random()*2*Math.PI;
-          let r = Math.sqrt((i+0.5)/this.numStars) * this.radius * (0.97+0.04*Math.random());
-          let x = this.centerX + r*Math.cos(angle);
-          let y = this.centerY + r*Math.sin(angle);
-          let spreadX = Math.random()*this.w;
-          let spreadY = Math.random()*this.h;
-          this.stars.push({
-            cx: x, cy: y,
-            sx: spreadX, sy: spreadY,
-            r: Math.random()*1.7 + 0.5,
-            speed: Math.random()*0.07 + 0.03,
-            twinkle: Math.random()*Math.PI*2,
-            opacity: Math.random()*0.8 + 0.2
-          });
-        }
       }
       draw() {
         this.ctx.clearRect(0, 0, this.w, this.h);
@@ -633,7 +674,78 @@
     window.addEventListener('DOMContentLoaded', function() {
       const canvas = document.getElementById('star-canvas');
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
-      // 彩蛋计数器
+      // ====== 卡片滑动（第二页功能）======
+      setTimeout(function(){
+        const cardsRow = document.getElementById('cards-row');
+        if (!cardsRow) return;
+        const cards = cardsRow.querySelectorAll('.card');
+        const btnLeft = document.getElementById('card-btn-left');
+        const btnRight = document.getElementById('card-btn-right');
+        let curCard = 0;
+        function updateCards() {
+          cards.forEach((card, idx) => {
+            if(idx === curCard){
+              card.style.transform = 'translateX(0) scale(1)';
+              card.style.opacity = 1;
+              card.style.zIndex = 2;
+            } else if(idx < curCard){
+              card.style.transform = 'translateX(-120%) scale(0.9)';
+              card.style.opacity = 0.5;
+              card.style.zIndex = 1;
+            } else {
+              card.style.transform = 'translateX(120%) scale(0.9)';
+              card.style.opacity = 0.5;
+              card.style.zIndex = 1;
+            }
+          });
+          btnLeft.disabled = (curCard === 0);
+          btnRight.disabled = (curCard === cards.length - 1);
+        }
+        updateCards();
+
+        btnLeft.addEventListener('click', function() {
+          if(curCard > 0){
+            curCard--;
+            updateCards();
+          }
+        });
+        btnRight.addEventListener('click', function() {
+          if(curCard < cards.length - 1){
+            curCard++;
+            updateCards();
+          }
+        });
+
+        // 触控板/手机滑动
+        let cardStartX = null;
+        cardsRow.addEventListener('touchstart', function(e){
+          if(e.touches.length===1) cardStartX = e.touches[0].clientX;
+        },{passive:true});
+        cardsRow.addEventListener('touchend', function(e){
+          if(cardStartX===null) return;
+          const endX = (e.changedTouches && e.changedTouches[0].clientX) || 0;
+          if(cardStartX-endX > 40 && curCard < cards.length-1){
+            curCard++;
+            updateCards();
+          }else if(endX-cardStartX > 40 && curCard > 0){
+            curCard--;
+            updateCards();
+          }
+          cardStartX = null;
+        },{passive:true});
+        // 笔记本触控板（wheel）
+        cardsRow.addEventListener('wheel', function(e){
+          if(e.deltaX > 30 && curCard < cards.length-1){
+            curCard++;
+            updateCards();
+          }else if(e.deltaX < -30 && curCard > 0){
+            curCard--;
+            updateCards();
+          }
+        },{passive:false});
+      }, 200);
+
+      // ====== 彩蛋计数器 ======
       const eggLink = document.getElementById('egg-link');
       const eggTitle = document.getElementById('egg-title');
       const eggContent = document.getElementById('egg-content');
