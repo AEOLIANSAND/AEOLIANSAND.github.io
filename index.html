@@ -7,6 +7,7 @@
   <style>
     html, body {
       margin: 0; padding: 0; width: 100vw; height: 100vh;
+      min-height: 100vh;
       background: #000;
       font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","黑体","SimHei",Arial,sans-serif;
       overflow: hidden;
@@ -26,36 +27,28 @@
       z-index: 10;
       background: rgba(30,32,43,0.40);
       backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
       box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09);
       border-bottom: 1.5px solid rgba(255,255,255,0.13);
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-      transition: background 0.3s;
       user-select: none;
     }
     .logo {
       font-weight: 800;
       font-size: 1.2em;
       letter-spacing: 1.5px;
-      padding: 0 0 0 32px;
-      height: 56px;
+      padding-left: 32px;
       color: #fff;
       font-family: "Microsoft YaHei Light","微软雅黑 Light","Segoe UI",Arial,sans-serif;
       text-shadow: 0 2px 16px rgba(0,0,0,0.18);
       display: flex;
       align-items: center;
-      mix-blend-mode: lighten;
     }
     .logo a {
       color: inherit;
       text-decoration: none;
-      display: inline-block;
       padding: 0.2em 0;
     }
-
-    /* 页码指示器样式 */
     .page-indicator {
       position: fixed;
       right: 3vw;
@@ -66,6 +59,7 @@
       flex-direction: column;
       gap: 18px;
       user-select: none;
+      pointer-events: auto;
     }
     .indicator-dot {
       width: 12px;
@@ -73,7 +67,9 @@
       border-radius: 50%;
       background: #fff;
       opacity: 0.88;
-      transition: width 0.33s cubic-bezier(.7,0,.3,1), height 0.33s cubic-bezier(.7,0,.3,1), opacity 0.33s;
+      transition: width 0.33s cubic-bezier(.7,0,.3,1),
+                  height 0.33s cubic-bezier(.7,0,.3,1),
+                  opacity 0.33s;
       margin: 0 auto;
       cursor: pointer;
       box-sizing: border-box;
@@ -95,31 +91,34 @@
       .indicator-dot.active {width: 15px;height: 15px;}
     }
 
-    /* 页面内容层级和切换动画 */
     .pages-container {
       width: 100vw;
-      height: calc(100vh - 56px);
+      height: 100vh;
       position: fixed;
-      top: 56px; left: 0;
+      top: 0; left: 0;
       overflow: hidden;
       z-index: 2;
       background: transparent;
       touch-action: pan-y;
     }
+    /* ---- 页面切换动画 ---- */
     .page {
-      width: 100vw;
-      height: calc(100vh - 56px);
-      position: absolute;
       left: 0;
-      top: 0;
       background: transparent;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
       transition: transform 0.55s cubic-bezier(.7,0,.3,1), opacity 0.33s;
       will-change: transform, opacity;
       opacity: 1;
       pointer-events: auto;
+    }
+    .page.page-hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .page.page-in {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 3;
     }
     .page.page-out-up {
       transform: translateY(-100%);
@@ -131,16 +130,39 @@
       opacity: 0;
       pointer-events: none;
     }
-    .page.page-in {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-      z-index: 3;
+
+    /* ---- 第一页：全屏居中 ---- */
+    .page.fullscreen {
+      position: absolute;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      z-index: 2;
     }
-    .page.page-hide {
-      opacity: 0;
+    .fullscreen .page-content-outer {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
       pointer-events: none;
     }
+    .fullscreen .splash-text {
+      margin: 0 0 0 0;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      pointer-events: auto;
+    }
+
     .splash-text {
       margin-top: 8vh;
       margin-left: 8vw;
@@ -153,16 +175,15 @@
       font-family: 'Microsoft YaHei','黑体','SimHei','Heiti SC',Arial,sans-serif;
       font-size: 2.8em;
       font-weight: 900;
-      color: #fff;
+      color: var(--splash-color,#fff);
       letter-spacing: 2px;
       line-height: 1.3;
       text-shadow: 0 2px 18px rgba(0,0,0,0.22);
       margin-bottom: 0.4em;
+      transition: color 0.4s;
     }
-
     .cards-row {
       width: 100vw;
-      min-height: calc(100vh - 56px - 160px);
       display: flex;
       flex-direction: column;
       gap: 36px;
@@ -172,6 +193,8 @@
       position: relative;
       z-index: 2;
       margin-bottom: 0;
+      padding-top: 4vh;
+      padding-bottom: 4vh;
     }
     .card {
       width: 92vw;
@@ -200,10 +223,6 @@
       letter-spacing: 1.5px;
       line-height: 1.3;
       text-shadow: 0 2px 12px rgba(0,0,0,0.26),0 0 6px #2b387a55;
-      border: none;
-      padding-bottom: 0;
-      width: 100%;
-      box-sizing: border-box;
     }
     .card-content {
       font-size: 1.13em;
@@ -215,7 +234,7 @@
       width: 100%;
       box-sizing: border-box;
     }
-    .card-link, .egg-link {
+    .card-link {
       display: block;
       color: #4d7fff;
       margin-top: 0.7em;
@@ -227,23 +246,25 @@
       text-shadow: 0 1px 8px rgba(255,255,255,0.08);
       cursor: pointer;
     }
-    .card-link:hover, .egg-link:hover {
+    .card-link:hover {
       color: #fff9cc;
       border-bottom: 1px solid #4d7fff;
     }
-
-    /* footer只在第二页内部末尾显示 */
+    .footer-outer {
+      flex-shrink: 0;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
     footer {
       background: rgba(30,32,43,0.20);
       backdrop-filter: blur(10px) saturate(150%);
-      -webkit-backdrop-filter: blur(10px) saturate(150%);
       color: #d0d0e8;
       text-align: center;
       padding: 2em 0 1.2em 0;
       font-size: 1em;
       letter-spacing: 1px;
       border-top: 1px solid #222c35;
-      box-shadow: none;
       width: 100vw;
       margin: 0;
       flex-shrink: 0;
@@ -293,8 +314,9 @@
     @media (max-width:900px){
       header { height: 44px; }
       .logo { font-size: 1em;height:44px;padding-left:6px; }
-      .pages-container { top:44px; height:calc(100vh - 44px);}
-      .page, .cards-row{height:calc(100vh - 44px);}
+      .pages-container { top:0;height:100vh;}
+      .page{top:44px;}
+      .page.fullscreen{height:100vh;min-height:100vh;max-height:100vh;}
     }
     @media (max-width:700px){
       .splash-text { margin-top:4vh;margin-left:4vw;}
@@ -304,238 +326,335 @@
   </style>
 </head>
 <body>
-  <!-- 星空canvas -->
   <canvas id="star-canvas"></canvas>
-  <!-- LOGO栏 -->
   <header>
     <div class="logo">
       <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">AEOLIAN_SAND™</a>
     </div>
   </header>
-  <!-- 页面指示器 -->
-  <div class="page-indicator">
-    <div class="indicator-dot active" id="dot1"></div>
-    <div class="indicator-dot" id="dot2"></div>
-  </div>
-  <!-- 两页容器 -->
-  <div class="pages-container">
-    <!-- 第一页：诗句 -->
-    <div id="page1" class="page page-in">
-      <div class="splash-text">
-        <div class="splash-line">大鹏一日同风起，</div>
-        <div class="splash-line">扶摇直上九万里。</div>
-      </div>
-    </div>
-    <!-- 第二页：卡片主页+footer -->
-    <div id="page2" class="page page-out-down" style="flex-direction:column;">
-      <div class="cards-row">
-        <div class="card">
+  <div class="page-indicator" id="page-indicator"></div>
+  <div class="pages-container" id="pages-container"></div>
+  <script>
+    // ====== 配置所有页面内容 ======
+    function getPages() {
+      // 判断是否显示彩蛋（2025-06-30及之前显示，2025-07-01及以后永久移除）
+      const now = new Date();
+      const deadline = new Date('2025-07-01T00:00:00+08:00');
+      const cards2 = [
+        `<div class="card">
           <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
           <div class="card-content">该网站还在建设中，敬请期待！</div>
-        </div>
-        <div class="card">
-          <div class="card-title">见证历史。</div>
-          <div class="card-content">
-            2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
-          </div>
-          <a href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener" class="card-link">查看详情&gt;</a>
-        </div>
-        <div class="card" id="egg-card">
-          <div class="card-title" id="egg-title">彩蛋。</div>
-          <div class="card-content" id="egg-content">
-            <span class="egg-link" id="egg-link">点击此处&gt;</span>
-          </div>
-        </div>
-      </div>
-      <footer>
-        <div class="footer-links">
-          <div class="footer-title">相关网站</div>
-          <ul>
-            <li>
-              <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
-            </li>
-            <li>
-              <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
-            </li>
-          </ul>
-          <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
-        </div>
-        <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
-      </footer>
-    </div>
-  </div>
-  <script>
-    // 页码指示器动画
-    function setIndicator(pageIdx) {
-      const dot1 = document.getElementById('dot1');
-      const dot2 = document.getElementById('dot2');
-      if(pageIdx === 0){
-        dot1.classList.add('active');
-        dot2.classList.remove('active');
-      }else{
-        dot1.classList.remove('active');
-        dot2.classList.add('active');
+        </div>`
+      ];
+      if(now < deadline){
+        cards2.push(
+          `<div class="card" id="egg-card">
+            <div class="card-title" id="egg-title">彩蛋。</div>
+            <div class="card-content" id="egg-content">
+              <span class="egg-link" id="egg-link">点击此处&gt;</span>
+            </div>
+          </div>`
+        );
+      }
+      return [
+        // 页1
+        {
+          html: `<div class="page-content-outer">
+            <div class="splash-text">
+              <div class="splash-line" id="splash-line-1">大鹏一日同风起，</div>
+              <div class="splash-line" id="splash-line-2">扶摇直上九万里。</div>
+            </div>
+          </div>`,
+          fullscreen: true
+        },
+        // 页2
+        {
+          html: `<div class="page-content-outer">
+            <div class="cards-row">
+              ${cards2.join("")}
+            </div>
+          </div>`
+        },
+        // 页3（内容多，footer吸底）
+        {
+          html: `<div class="page-content-outer">
+            <div class="cards-row">
+              <div class="card">
+                <div class="card-title">见证历史。</div>
+                <div class="card-content">
+                  2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
+                  <br><br>${'<div>这是演示内容</div>'.repeat(12)}
+                </div>
+              </div>
+            </div>
+          </div>`,
+          footer: `<div class="footer-outer"><footer>
+            <div class="footer-links">
+              <div class="footer-title">相关网站</div>
+              <ul>
+                <li>
+                  <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+                </li>
+                <li>
+                  <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+                </li>
+              </ul>
+              <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+            </div>
+            <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
+          </footer></div>`
+        }
+      ];
+    }
+    // ====== 页面和指示器渲染 ======
+    const container = document.getElementById('pages-container');
+    const indicator = document.getElementById('page-indicator');
+    let pages = getPages();
+    let pageElems = [];
+    pages.forEach((page, idx) => {
+      const div = document.createElement('div');
+      div.className = 'page ' + (page.fullscreen ? 'fullscreen' : 'autosize');
+      if (idx === 0) div.classList.add('page-in');
+      else div.classList.add('page-out-down', 'page-hide');
+      div.dataset.idx = idx;
+      div.innerHTML = page.html + (idx === pages.length-1 && page.footer ? page.footer : '');
+      if(!page.fullscreen) div.style.overflowY = 'auto';
+      container.appendChild(div);
+      pageElems.push(div);
+    });
+    function renderDots(active){
+      indicator.innerHTML = '';
+      for(let i=0;i<pages.length;i++){
+        const dot = document.createElement('div');
+        dot.className = 'indicator-dot' + (i===active?' active':'');
+        dot.dataset.idx = i;
+        dot.title = `第${i+1}页`;
+        dot.addEventListener('click', function(e){
+          e.preventDefault();
+          if(animating || curPage === i) return;
+          gotoPage(i);
+        });
+        indicator.appendChild(dot);
       }
     }
-
-    // 页面切换动效，上下滑/滚轮/点击dot
-    (function(){
-      const page1 = document.getElementById('page1');
-      const page2 = document.getElementById('page2');
-      const dot1 = document.getElementById('dot1');
-      const dot2 = document.getElementById('dot2');
-      let currentPage = 0; // 0:第一页，1:第二页
-      let animating = false;
-      // 切换到第二页
-      function toPage2(){
-        if(currentPage===1||animating) return;
-        animating = true;
-        page1.classList.remove('page-in','page-out-up','page-hide');
-        page2.classList.remove('page-in','page-out-down','page-hide');
-        page1.classList.add('page-out-up');
-        page2.classList.add('page-in');
-        setIndicator(1);
-        setTimeout(()=>{ // 动画结束后
-          page1.classList.add('page-hide');
-          animating = false;
-        },560);
-        currentPage = 1;
+    // ====== 切换页面动画逻辑 ======
+    let curPage = 0;
+    let animating = false;
+    function gotoPage(target){
+      if(animating || target===curPage || target<0 || target>=pages.length) return;
+      animating = true;
+      pageElems[curPage].classList.remove('page-in','page-out-up','page-out-down','page-hide');
+      pageElems[target].classList.remove('page-in','page-out-up','page-out-down','page-hide');
+      if(target > curPage){
+        pageElems[curPage].classList.add('page-out-up');
+        pageElems[target].classList.add('page-in');
+      }else{
+        pageElems[curPage].classList.add('page-out-down');
+        pageElems[target].classList.add('page-in');
       }
-      // 切换到第一页
-      function toPage1(){
-        if(currentPage===0||animating) return;
-        animating = true;
-        page1.classList.remove('page-in','page-out-up','page-hide');
-        page2.classList.remove('page-in','page-out-down','page-hide');
-        page1.classList.add('page-in');
-        page2.classList.add('page-out-down');
-        setIndicator(0);
-        setTimeout(()=>{ // 动画结束后
-          page2.classList.add('page-hide');
-          animating = false;
-        },560);
-        currentPage = 0;
+      renderDots(target);
+      if(starfield) starfield.setMode(target === 0 ? "center" : "spread");
+      setTimeout(()=>{
+        pageElems[curPage].classList.add('page-hide');
+        curPage = target;
+        animating = false;
+      },560);
+    }
+    // ====== 滚轮/滑动切换 ======
+    container.addEventListener('wheel', function(e){
+      if(animating) return;
+      if(e.deltaY > 30 && curPage < pages.length-1){
+        gotoPage(curPage+1);
+      }else if(e.deltaY < -30 && curPage > 0){
+        gotoPage(curPage-1);
       }
-      // 监听滚轮
-      document.querySelector('.pages-container').addEventListener('wheel', function(e){
-        if(animating) return;
-        if(currentPage===0 && e.deltaY > 30){
-          toPage2();
-        }else if(currentPage===1 && e.deltaY < -30){
-          toPage1();
-        }
-      }, {passive:false});
-      // 监听手势
-      let startY = null;
-      document.querySelector('.pages-container').addEventListener('touchstart', function(e){
-        if(e.touches.length===1) startY = e.touches[0].clientY;
-      },{passive:true});
-      document.querySelector('.pages-container').addEventListener('touchend', function(e){
-        if(startY===null) return;
-        const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
-        if(currentPage===0 && startY-endY > 60){
-          toPage2();
-        }else if(currentPage===1 && endY-startY > 60){
-          toPage1();
-        }
-        startY = null;
-      },{passive:true});
-      // 点击指示点
-      dot1.addEventListener('click', function(e){
-        e.preventDefault();
-        if(currentPage!==0) toPage1();
-      });
-      dot2.addEventListener('click', function(e){
-        e.preventDefault();
-        if(currentPage!==1) toPage2();
-      });
-    })();
+    }, {passive:false});
+    // 手势滑动
+    let startY = null;
+    container.addEventListener('touchstart', function(e){
+      if(e.touches.length===1) startY = e.touches[0].clientY;
+    },{passive:true});
+    container.addEventListener('touchend', function(e){
+      if(startY===null) return;
+      const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
+      if(startY-endY > 60 && curPage < pages.length-1){
+        gotoPage(curPage+1);
+      }else if(endY-startY > 60 && curPage > 0){
+        gotoPage(curPage-1);
+      }
+      startY = null;
+    },{passive:true});
+    renderDots(0);
 
-    // 星空动画
-    function StarField(canvas, options) {
-      options = options || {};
-      this.canvas = canvas;
-      this.ctx = canvas.getContext('2d');
-      this.stars = [];
-      this.numStars = options.numStars || (window.innerWidth < 700 ? 120 : 200);
-      this.resize = () => {
+    // ====== 星空动画（中心聚集&过渡&字体自适应）======
+    let starfield = null;
+    function getLuminance(r,g,b){
+      r = r/255; g = g/255; b = b/255;
+      r = r <= 0.03928 ? r/12.92 : Math.pow((r+0.055)/1.055,2.4);
+      g = g <= 0.03928 ? g/12.92 : Math.pow((g+0.055)/1.055,2.4);
+      b = b <= 0.03928 ? b/12.92 : Math.pow((b+0.055)/1.055,2.4);
+      return 0.2126*r + 0.7152*g + 0.0722*b;
+    }
+    function updatePoemColor(bgLuminance){
+      let color = bgLuminance < 0.4 ? "#fff" : "#222";
+      document.documentElement.style.setProperty('--splash-color', color);
+    }
+    class StarField {
+      constructor(canvas, numStars) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.mode = "center";
+        this.targetMode = "center";
+        this.animationProgress = 1;
+        this.numStars = numStars || 180;
+        this.resize();
+        this.createStars();
+        this.animate();
+        window.addEventListener('resize', () => {
+          this.resize();
+          this.createStars();
+        });
+      }
+      setMode(mode) {
+        if(mode === this.targetMode) return;
+        this.targetMode = mode;
+        this.startAnimation = performance.now();
+        this.startProgress = this.animationProgress;
+        this.animating = true;
+        this.animateTransition();
+      }
+      animateTransition(){
+        if(!this.animating) return;
+        let now = performance.now();
+        let t = Math.min(1,(now-this.startAnimation)/680);
+        if(this.targetMode==="spread"){
+          this.animationProgress = this.startProgress + (1-this.startProgress)*t;
+        }else{
+          this.animationProgress = this.startProgress - this.startProgress*t;
+        }
+        if(t<1){
+          requestAnimationFrame(()=>this.animateTransition());
+        }else{
+          this.animationProgress = (this.targetMode==="spread"?1:0);
+          this.animating = false;
+        }
+      }
+      resize() {
         this.w = this.canvas.width = window.innerWidth;
         this.h = this.canvas.height = window.innerHeight;
-      };
-      this.createStars = () => {
+        this.centerX = this.w/2;
+        this.centerY = this.h/2;
+        this.radius = Math.min(this.w,this.h) * 0.36;
+      }
+      createStars() {
         this.stars = [];
-        for (let i = 0; i < this.numStars; i++) {
+        for(let i=0; i<this.numStars; i++){
+          let angle = Math.random()*2*Math.PI;
+          let r = Math.sqrt((i+0.5)/this.numStars) * this.radius * (0.97+0.04*Math.random());
+          let x = this.centerX + r*Math.cos(angle);
+          let y = this.centerY + r*Math.sin(angle);
+          let spreadX = Math.random()*this.w;
+          let spreadY = Math.random()*this.h;
           this.stars.push({
-            x: Math.random() * this.w,
-            y: Math.random() * this.h,
-            r: Math.random() * 1.6 + 0.4,
-            speed: Math.random() * 0.09 + 0.03,
-            twinkle: Math.random() * Math.PI * 2,
-            opacity: Math.random() * 0.8 + 0.2
+            cx: x, cy: y,
+            sx: spreadX, sy: spreadY,
+            r: Math.random()*1.7 + 0.5,
+            speed: Math.random()*0.07 + 0.03,
+            twinkle: Math.random()*Math.PI*2,
+            opacity: Math.random()*0.8 + 0.2
           });
         }
-      };
-      this.draw = () => {
+      }
+      draw() {
         this.ctx.clearRect(0, 0, this.w, this.h);
-        for (let i = 0; i < this.stars.length; i++) {
+        let bgColor=[0,0,0];
+        let centerCount=0;
+        for(let i=0;i<this.stars.length;i++){
           let s = this.stars[i];
-          let tw = 0.6 + 0.4 * Math.sin(s.twinkle + Date.now() * 0.0014 + i);
+          let t = this.animationProgress;
+          let x = s.cx*(1-t) + s.sx*t;
+          let y = s.cy*(1-t) + s.sy*t;
+          if(this.animationProgress<0.1 && i>0){
+            let prev = this.stars[i-1];
+            let dx = x-prev.cx;
+            let dy = y-prev.cy;
+            let d = Math.sqrt(dx*dx+dy*dy);
+            if(d<10){
+              x += 10/d*dx;
+              y += 10/d*dy;
+            }
+          }
+          let tw = 0.6 + 0.4*Math.sin(s.twinkle + Date.now()*0.0014 + i*0.6);
           let o = s.opacity * tw;
           this.ctx.beginPath();
-          this.ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2, false);
+          this.ctx.arc(x, y, s.r, 0, Math.PI*2, false);
           this.ctx.fillStyle = "rgba(255,255,255," + o + ")";
           this.ctx.shadowColor = "#fff";
           this.ctx.shadowBlur = 8 * o;
           this.ctx.fill();
           this.ctx.shadowBlur = 0;
-          s.x += Math.cos(s.twinkle) * s.speed * 0.33;
-          s.y += Math.sin(s.twinkle) * s.speed * 0.33;
-          if (s.x < 0) s.x = this.w;
-          if (s.x > this.w) s.x = 0;
-          if (s.y < 0) s.y = this.h;
-          if (s.y > this.h) s.y = 0;
+          if(this.animationProgress<1){
+            s.cx += Math.cos(s.twinkle)*s.speed*0.12;
+            s.cy += Math.sin(s.twinkle)*s.speed*0.10;
+          }else{
+            s.sx += Math.cos(s.twinkle)*s.speed*0.12;
+            s.sy += Math.sin(s.twinkle)*s.speed*0.10;
+          }
+          if(this.animationProgress<0.3){
+            if(s.cx-this.centerX>this.radius || s.cx-this.centerX<-this.radius ||
+               s.cy-this.centerY>this.radius || s.cy-this.centerY<-this.radius){
+              let angle=Math.random()*2*Math.PI;
+              let r=Math.random()*this.radius*0.95;
+              s.cx = this.centerX+r*Math.cos(angle);
+              s.cy = this.centerY+r*Math.sin(angle);
+            }
+          }else{
+            if(s.sx<0) s.sx=this.w;
+            if(s.sx>this.w) s.sx=0;
+            if(s.sy<0) s.sy=this.h;
+            if(s.sy>this.h) s.sy=0;
+          }
+          if(i<30 && Math.pow(x-this.centerX,2)+Math.pow(y-this.centerY,2)<this.radius*this.radius*0.3){
+            bgColor[0]+=255*o; bgColor[1]+=255*o; bgColor[2]+=255*o; centerCount++;
+          }
         }
-      };
-      this.animate = () => {
+        if(document.getElementById('splash-line-1')){
+          let ratio = centerCount/30;
+          let starLum = getLuminance(255,255,255);
+          let bgLum = starLum*ratio + getLuminance(0,0,0)*(1-ratio);
+          updatePoemColor(bgLum);
+        }
+      }
+      animate = () => {
         this.draw();
         requestAnimationFrame(this.animate);
-      };
-      this.init = () => {
-        this.resize();
-        this.createStars();
-        this.animate();
-      };
-      window.addEventListener('resize', () => {
-        this.resize();
-        this.createStars();
-      });
-      this.init();
+      }
     }
     window.addEventListener('DOMContentLoaded', function() {
       const canvas = document.getElementById('star-canvas');
-      new StarField(canvas, {
-        numStars: window.innerWidth < 700 ? 120 : 200
-      });
+      starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
       // 彩蛋计数器
       const eggLink = document.getElementById('egg-link');
       const eggTitle = document.getElementById('egg-title');
       const eggContent = document.getElementById('egg-content');
-      let revealed = false;
-      eggLink.addEventListener('click', function() {
-        if (revealed) return;
-        revealed = true;
-        fetch('https://api.countapi.xyz/hit/aeoliansand.github.io/egg')
-          .then(r => r.json())
-          .then(data => {
-            const count = data.value;
-            eggTitle.textContent = "你打开了新大陆。";
-            eggContent.innerHTML = `你是第${count}个访问AEOLIAN_SAND网站的人`;
-          })
-          .catch(() => {
-            eggTitle.textContent = "你打开了新大陆。";
-            eggContent.innerHTML = "你是第1个访问AEOLIAN_SAND网站的人";
-          });
-      });
+      if(eggLink && eggTitle && eggContent){
+        let revealed = false;
+        eggLink.addEventListener('click', function() {
+          if (revealed) return;
+          revealed = true;
+          fetch('https://api.countapi.xyz/hit/aeoliansand.github.io/egg')
+            .then(r => r.json())
+            .then(data => {
+              const count = data.value;
+              eggTitle.textContent = "你打开了新大陆。";
+              eggContent.innerHTML = `你是第${count}个访问AEOLIAN_SAND网站的人`;
+            })
+            .catch(() => {
+              eggTitle.textContent = "你打开了新大陆。";
+              eggContent.innerHTML = "你是第1个访问AEOLIAN_SAND网站的人";
+            });
+        });
+      }
     });
   </script>
 </body>
