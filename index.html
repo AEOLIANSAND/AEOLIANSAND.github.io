@@ -8,7 +8,7 @@
     html, body {
       margin: 0; padding: 0; width: 100vw; height: 100vh;
       background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "黑体", "SimHei", Arial, sans-serif;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","黑体","SimHei",Arial,sans-serif;
       overflow: hidden;
     }
     #star-canvas {
@@ -24,7 +24,7 @@
       position: fixed;
       top: 0; left: 0;
       z-index: 10;
-      background: rgba(30, 32, 43, 0.40);
+      background: rgba(30,32,43,0.40);
       backdrop-filter: blur(18px) saturate(180%);
       -webkit-backdrop-filter: blur(18px) saturate(180%);
       box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09);
@@ -42,7 +42,7 @@
       padding: 0 0 0 32px;
       height: 56px;
       color: #fff;
-      font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
+      font-family: "Microsoft YaHei Light","微软雅黑 Light","Segoe UI",Arial,sans-serif;
       text-shadow: 0 2px 16px rgba(0,0,0,0.18);
       display: flex;
       align-items: center;
@@ -55,25 +55,90 @@
       padding: 0.2em 0;
     }
 
-    /* 页面内容层级 */
-    .page {
+    /* 页码指示器样式 */
+    .page-indicator {
       position: fixed;
-      top: 56px; left: 0;
+      right: 3vw;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      user-select: none;
+    }
+    .indicator-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0.88;
+      transition: width 0.33s cubic-bezier(.7,0,.3,1), height 0.33s cubic-bezier(.7,0,.3,1), opacity 0.33s;
+      margin: 0 auto;
+      cursor: pointer;
+      box-sizing: border-box;
+      border: 2px solid transparent;
+    }
+    .indicator-dot.active {
+      width: 20px;
+      height: 20px;
+      opacity: 1;
+      box-shadow: 0 2px 12px #fff8, 0 0 6px #fff6;
+      border: 2px solid #fff;
+    }
+    .indicator-dot:active {
+      opacity: 0.6;
+    }
+    @media (max-width: 700px) {
+      .page-indicator { right: 2vw; gap: 12px;}
+      .indicator-dot { width: 9px;height: 9px;}
+      .indicator-dot.active {width: 15px;height: 15px;}
+    }
+
+    /* 页面内容层级和切换动画 */
+    .pages-container {
       width: 100vw;
       height: calc(100vh - 56px);
-      min-height: 0;
-      background: transparent;
-      z-index: 2;
-      transition: opacity 0.6s cubic-bezier(.4,0,.2,1), visibility 0.6s;
-      will-change: opacity;
+      position: fixed;
+      top: 56px; left: 0;
       overflow: hidden;
+      z-index: 2;
+      background: transparent;
+      touch-action: pan-y;
+    }
+    .page {
+      width: 100vw;
+      height: calc(100vh - 56px);
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: transparent;
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
+      transition: transform 0.55s cubic-bezier(.7,0,.3,1), opacity 0.33s;
+      will-change: transform, opacity;
+      opacity: 1;
+      pointer-events: auto;
     }
-    .page.hide {
+    .page.page-out-up {
+      transform: translateY(-100%);
       opacity: 0;
-      visibility: hidden;
+      pointer-events: none;
+    }
+    .page.page-out-down {
+      transform: translateY(100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .page.page-in {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 3;
+    }
+    .page.page-hide {
+      opacity: 0;
       pointer-events: none;
     }
     .splash-text {
@@ -85,7 +150,7 @@
       user-select: none;
     }
     .splash-line {
-      font-family: 'Microsoft YaHei', '黑体', 'SimHei', 'Heiti SC', Arial, sans-serif;
+      font-family: 'Microsoft YaHei','黑体','SimHei','Heiti SC',Arial,sans-serif;
       font-size: 2.8em;
       font-weight: 900;
       color: #fff;
@@ -94,17 +159,10 @@
       text-shadow: 0 2px 18px rgba(0,0,0,0.22);
       margin-bottom: 0.4em;
     }
-    .splash-tip {
-      margin-top: 2em;
-      font-size: 1.1em;
-      color: #ddd;
-      letter-spacing: 1px;
-      user-select: none;
-    }
 
     .cards-row {
       width: 100vw;
-      min-height: calc(100vh - 56px - 160px); /* 保证footer在底部，footer高度约100-160px */
+      min-height: calc(100vh - 56px - 160px);
       display: flex;
       flex-direction: column;
       gap: 36px;
@@ -119,11 +177,11 @@
       width: 92vw;
       max-width: 520px;
       min-width: 0;
-      background: rgba(24, 28, 48, 0.72);
+      background: rgba(24,28,48,0.72);
       backdrop-filter: blur(18px) saturate(170%);
       -webkit-backdrop-filter: blur(18px) saturate(170%);
       border-radius: 18px;
-      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.16);
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.16);
       border: none;
       padding: 36px 32px 28px 32px;
       display: flex;
@@ -141,7 +199,7 @@
       margin-bottom: 0.7em;
       letter-spacing: 1.5px;
       line-height: 1.3;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.26), 0 0 6px #2b387a55;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.26),0 0 6px #2b387a55;
       border: none;
       padding-bottom: 0;
       width: 100%;
@@ -174,8 +232,9 @@
       border-bottom: 1px solid #4d7fff;
     }
 
+    /* footer只在第二页内部末尾显示 */
     footer {
-      background: rgba(30, 32, 43, 0.20);
+      background: rgba(30,32,43,0.20);
       backdrop-filter: blur(10px) saturate(150%);
       -webkit-backdrop-filter: blur(10px) saturate(150%);
       color: #d0d0e8;
@@ -186,14 +245,12 @@
       border-top: 1px solid #222c35;
       box-shadow: none;
       width: 100vw;
-      position: static;
-      left: 0; bottom: 0;
-      z-index: 10;
       margin: 0;
+      flex-shrink: 0;
     }
     .footer-links {
       font-size: 0.99em;
-      font-family: "Microsoft YaHei", "微软雅黑", "Segoe UI", Arial, sans-serif;
+      font-family: "Microsoft YaHei","微软雅黑","Segoe UI",Arial,sans-serif;
       color: #b5bad2;
       text-align: center;
       margin-bottom: 1.2em;
@@ -233,17 +290,16 @@
       margin-top: 0.6em;
       font-family: inherit;
     }
-
-    @media (max-width: 900px) {
+    @media (max-width:900px){
       header { height: 44px; }
-      .logo { font-size: 1em; height: 44px; padding-left: 6px; }
-      .page { top: 44px; height: calc(100vh - 44px);}
+      .logo { font-size: 1em;height:44px;padding-left:6px; }
+      .pages-container { top:44px; height:calc(100vh - 44px);}
+      .page, .cards-row{height:calc(100vh - 44px);}
     }
-    @media (max-width: 700px) {
-      .splash-text { margin-top: 4vh; margin-left: 4vw; }
-      .splash-line { font-size: 1.5em; }
-      .splash-tip { font-size: 0.95em; }
-      .card { padding: 20px 4vw 18px 4vw; }
+    @media (max-width:700px){
+      .splash-text { margin-top:4vh;margin-left:4vw;}
+      .splash-line{font-size:1.5em;}
+      .card{padding:20px 4vw 18px 4vw;}
     }
   </style>
 </head>
@@ -253,110 +309,146 @@
   <!-- LOGO栏 -->
   <header>
     <div class="logo">
-      <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">
-        AEOLIAN_SAND™
-      </a>
+      <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">AEOLIAN_SAND™</a>
     </div>
   </header>
-  <!-- 第一页：诗句 -->
-  <div id="page1" class="page">
-    <div class="splash-text">
-      <div class="splash-line">大鹏一日同风起，</div>
-      <div class="splash-line">扶摇直上九万里。</div>
-      <div class="splash-tip">下滑或上滑进入主页</div>
-    </div>
+  <!-- 页面指示器 -->
+  <div class="page-indicator">
+    <div class="indicator-dot active" id="dot1"></div>
+    <div class="indicator-dot" id="dot2"></div>
   </div>
-  <!-- 第二页：卡片主页 -->
-  <div id="page2" class="page hide" style="flex-direction:column;">
-    <div class="cards-row">
-      <div class="card">
-        <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
-        <div class="card-content">
-          该网站还在建设中，敬请期待！
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">见证历史。</div>
-        <div class="card-content">
-          2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
-        </div>
-        <a href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener" class="card-link">查看详情&gt;</a>
-      </div>
-      <div class="card" id="egg-card">
-        <div class="card-title" id="egg-title">彩蛋。</div>
-        <div class="card-content" id="egg-content">
-          <span class="egg-link" id="egg-link">点击此处&gt;</span>
-        </div>
+  <!-- 两页容器 -->
+  <div class="pages-container">
+    <!-- 第一页：诗句 -->
+    <div id="page1" class="page page-in">
+      <div class="splash-text">
+        <div class="splash-line">大鹏一日同风起，</div>
+        <div class="splash-line">扶摇直上九万里。</div>
       </div>
     </div>
-    <footer>
-      <div class="footer-links">
-        <div class="footer-title">相关网站</div>
-        <ul>
-          <li>
-            <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
-          </li>
-          <li>
-            <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
-          </li>
-        </ul>
-        <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+    <!-- 第二页：卡片主页+footer -->
+    <div id="page2" class="page page-out-down" style="flex-direction:column;">
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
+          <div class="card-content">该网站还在建设中，敬请期待！</div>
+        </div>
+        <div class="card">
+          <div class="card-title">见证历史。</div>
+          <div class="card-content">
+            2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
+          </div>
+          <a href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener" class="card-link">查看详情&gt;</a>
+        </div>
+        <div class="card" id="egg-card">
+          <div class="card-title" id="egg-title">彩蛋。</div>
+          <div class="card-content" id="egg-content">
+            <span class="egg-link" id="egg-link">点击此处&gt;</span>
+          </div>
+        </div>
       </div>
-      <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
-    </footer>
+      <footer>
+        <div class="footer-links">
+          <div class="footer-title">相关网站</div>
+          <ul>
+            <li>
+              <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+            </li>
+            <li>
+              <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+            </li>
+          </ul>
+          <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+        </div>
+        <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
+      </footer>
+    </div>
   </div>
   <script>
-    // 页面切换逻辑：第一页下滚/上滑进主页，主页上滚/下滑回第一页
-    (function() {
+    // 页码指示器动画
+    function setIndicator(pageIdx) {
+      const dot1 = document.getElementById('dot1');
+      const dot2 = document.getElementById('dot2');
+      if(pageIdx === 0){
+        dot1.classList.add('active');
+        dot2.classList.remove('active');
+      }else{
+        dot1.classList.remove('active');
+        dot2.classList.add('active');
+      }
+    }
+
+    // 页面切换动效，上下滑/滚轮/点击dot
+    (function(){
       const page1 = document.getElementById('page1');
       const page2 = document.getElementById('page2');
-      let wheelLocked = false;
-      // 第一页滚轮/触摸
-      page1.addEventListener('wheel', function(e) {
-        if (wheelLocked) return;
-        if (e.deltaY > 30) { // 向下滚动
-          wheelLocked = true;
-          page1.classList.add('hide');
-          page2.classList.remove('hide');
-          setTimeout(() => { wheelLocked = false; }, 800);
+      const dot1 = document.getElementById('dot1');
+      const dot2 = document.getElementById('dot2');
+      let currentPage = 0; // 0:第一页，1:第二页
+      let animating = false;
+      // 切换到第二页
+      function toPage2(){
+        if(currentPage===1||animating) return;
+        animating = true;
+        page1.classList.remove('page-in','page-out-up','page-hide');
+        page2.classList.remove('page-in','page-out-down','page-hide');
+        page1.classList.add('page-out-up');
+        page2.classList.add('page-in');
+        setIndicator(1);
+        setTimeout(()=>{ // 动画结束后
+          page1.classList.add('page-hide');
+          animating = false;
+        },560);
+        currentPage = 1;
+      }
+      // 切换到第一页
+      function toPage1(){
+        if(currentPage===0||animating) return;
+        animating = true;
+        page1.classList.remove('page-in','page-out-up','page-hide');
+        page2.classList.remove('page-in','page-out-down','page-hide');
+        page1.classList.add('page-in');
+        page2.classList.add('page-out-down');
+        setIndicator(0);
+        setTimeout(()=>{ // 动画结束后
+          page2.classList.add('page-hide');
+          animating = false;
+        },560);
+        currentPage = 0;
+      }
+      // 监听滚轮
+      document.querySelector('.pages-container').addEventListener('wheel', function(e){
+        if(animating) return;
+        if(currentPage===0 && e.deltaY > 30){
+          toPage2();
+        }else if(currentPage===1 && e.deltaY < -30){
+          toPage1();
         }
-      }, { passive: false });
-      let startY1 = null;
-      page1.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 1) startY1 = e.touches[0].clientY;
-      }, { passive: true });
-      page1.addEventListener('touchend', function(e) {
-        if (startY1 === null) return;
+      }, {passive:false});
+      // 监听手势
+      let startY = null;
+      document.querySelector('.pages-container').addEventListener('touchstart', function(e){
+        if(e.touches.length===1) startY = e.touches[0].clientY;
+      },{passive:true});
+      document.querySelector('.pages-container').addEventListener('touchend', function(e){
+        if(startY===null) return;
         const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
-        if (startY1 - endY > 60) { // 上滑
-          page1.classList.add('hide');
-          page2.classList.remove('hide');
+        if(currentPage===0 && startY-endY > 60){
+          toPage2();
+        }else if(currentPage===1 && endY-startY > 60){
+          toPage1();
         }
-        startY1 = null;
-      }, { passive: true });
-      // 第二页滚轮/触摸
-      page2.addEventListener('wheel', function(e) {
-        if (wheelLocked) return;
-        if (e.deltaY < -30) { // 向上滚动
-          wheelLocked = true;
-          page2.classList.add('hide');
-          page1.classList.remove('hide');
-          setTimeout(() => { wheelLocked = false; }, 800);
-        }
-      }, { passive: false });
-      let startY2 = null;
-      page2.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 1) startY2 = e.touches[0].clientY;
-      }, { passive: true });
-      page2.addEventListener('touchend', function(e) {
-        if (startY2 === null) return;
-        const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
-        if (endY - startY2 > 60) { // 下滑
-          page2.classList.add('hide');
-          page1.classList.remove('hide');
-        }
-        startY2 = null;
-      }, { passive: true });
+        startY = null;
+      },{passive:true});
+      // 点击指示点
+      dot1.addEventListener('click', function(e){
+        e.preventDefault();
+        if(currentPage!==0) toPage1();
+      });
+      dot2.addEventListener('click', function(e){
+        e.preventDefault();
+        if(currentPage!==1) toPage2();
+      });
     })();
 
     // 星空动画
