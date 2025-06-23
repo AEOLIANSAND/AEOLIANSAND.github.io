@@ -266,8 +266,8 @@
       width: 100%;
       box-sizing: border-box;
     }
-    .card-link {
-      display: block;
+    .card-link, .card-detail-link {
+      display: inline-block;
       color: #4d7fff;
       margin-top: 0.7em;
       text-decoration: none;
@@ -277,8 +277,11 @@
       transition: color .2s, border-bottom .2s;
       text-shadow: 0 1px 8px rgba(255,255,255,0.08);
       cursor: pointer;
+      background: none;
+      padding: 0;
+      border: none;
     }
-    .card-link:hover {
+    .card-link:hover, .card-detail-link:hover {
       color: #fff9cc;
       border-bottom: 1px solid #4d7fff;
     }
@@ -388,7 +391,8 @@
           <div class="card-title">见证历史。</div>
           <div class="card-content">
             2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
-            <br><br>${'<div>这是演示内容</div>'.repeat(12)}
+            <br>
+            <a class="card-detail-link" id="card-detail-link" href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener">查看详情&gt;</a>
           </div>
         </div>`
       ];
