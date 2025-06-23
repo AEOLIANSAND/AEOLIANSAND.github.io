@@ -4,106 +4,93 @@
   <meta charset="UTF-8">
   <title>AEOLIAN_SAND网站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AEOLIAN_SAND网站 - 个人主页，包含Bilibili、GitHub等相关链接。">
   <style>
-    :root {
-      --logo-color: #fff;
-    }
     html, body {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
-      font-weight: 400;
+      margin: 0; padding: 0; width: 100vw; height: 100vh;
       background: #000;
-      transition: background 0.3s;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "黑体", "SimHei", Arial, sans-serif;
+      overflow: hidden;
     }
-    body {
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-      opacity: 0;
-      transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
+    #star-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
     }
-    body.fade-in { opacity: 1; }
-
-    header {
-      width: 100%;
-      height: 56px;
-      position: relative;
-      z-index: 10;
-      background: rgba(30, 32, 43, 0.40);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09);
-      border-bottom: 1.5px solid rgba(255,255,255,0.13);
+    .page {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: flex-start;
-      transition: background 0.3s;
+      z-index: 1;
+      transition: opacity 0.6s cubic-bezier(.4,0,.2,1), visibility 0.6s;
+      background: transparent;
+      will-change: opacity;
     }
-    .logo {
-      font-weight: 800;
-      font-size: 1.2em;
-      letter-spacing: 1.5px;
-      user-select: none;
-      margin: 0;
-      padding: 0 0 0 32px;
+    .page.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-text {
+      margin-top: 12vh;
+      margin-left: 8vw;
       display: flex;
-      align-items: center;
-      height: 56px;
-      color: var(--logo-color);
-      font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
-      transition: color 0.3s;
-      mix-blend-mode: lighten;
-      text-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      flex-direction: column;
+      align-items: flex-start;
+      user-select: none;
     }
-    .logo a {
-      color: inherit;
-      text-decoration: none;
-      display: inline-block;
-      padding: 0.2em 0;
+    .splash-line {
+      font-family: 'Microsoft YaHei', '黑体', 'SimHei', 'Heiti SC', Arial, sans-serif;
+      font-size: 2.8em;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 2px;
+      line-height: 1.3;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.22);
+      margin-bottom: 0.4em;
     }
-
-    main {
-      width: 100%;
-      max-width: 1000px;
-      margin: 60px auto 0 auto;
-      padding: 0 16px;
-      background: none;
-      box-shadow: none;
-      border-radius: 0;
-      min-height: 300px;
-      position: relative;
-      z-index: 2;
+    .splash-tip {
+      margin-top: 2em;
+      font-size: 1.1em;
+      color: #ddd;
+      letter-spacing: 1px;
+      user-select: none;
     }
     .cards-row {
+      width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       gap: 36px;
-      width: 100%;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      position: relative;
+      z-index: 2;
+      overflow: visible;
     }
     .card {
-      width: 100%;
+      width: 92vw;
       max-width: 520px;
       min-width: 0;
-      margin: 0 auto;
-      background: rgba(24, 28, 48, 0.72); /* 深色半透明亚克力 */
+      background: rgba(24, 28, 48, 0.72);
       backdrop-filter: blur(18px) saturate(170%);
       -webkit-backdrop-filter: blur(18px) saturate(170%);
       border-radius: 18px;
-      box-shadow:
-        0 8px 32px 0 rgba(0,0,0,0.28),
-        0 2px 8px rgba(0,0,0,0.16);
-      border: none; /* 去掉边框 */
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.16);
+      border: none;
       padding: 36px 32px 28px 32px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       box-sizing: border-box;
       min-height: 180px;
-      height: auto;
-      transition: box-shadow 0.25s cubic-bezier(.4,0,.2,1), background 0.25s cubic-bezier(.4,0,.2,1);
+      margin-bottom: 10px;
+      color: #d9e0fa;
     }
     .card-title {
       font-size: 1.26em;
@@ -135,7 +122,6 @@
       text-decoration: none;
       font-size: 1em;
       font-weight: 500;
-      font-family: "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
       border-bottom: 1px solid transparent;
       transition: color .2s, border-bottom .2s;
       text-shadow: 0 1px 8px rgba(255,255,255,0.08);
@@ -145,95 +131,27 @@
       color: #fff9cc;
       border-bottom: 1px solid #4d7fff;
     }
-
-    footer {
-      background: rgba(30, 32, 43, 0.20);
-      backdrop-filter: blur(10px) saturate(150%);
-      -webkit-backdrop-filter: blur(10px) saturate(150%);
-      color: #d0d0e8;
-      text-align: center;
-      padding: 2em 0 1.2em 0;
-      margin-top: 3.5em;
-      font-size: 1em;
-      letter-spacing: 1px;
-      border-top: 1px solid #222c35;
-      box-shadow: none;
-    }
-    .footer-links {
-      font-size: 0.99em;
-      font-family: "Microsoft YaHei", "微软雅黑", "Segoe UI", Arial, sans-serif;
-      color: #b5bad2;
-      text-align: center;
-      margin-bottom: 1.2em;
-      letter-spacing: 0.3px;
-    }
-    .footer-links ul {
-      padding-left: 0;
-      list-style: none;
-      margin: 0.4em 0;
-    }
-    .footer-links li {
-      display: inline-block;
-      margin: 0 0.9em 0 0;
-      font-size: 0.99em;
-    }
-    .footer-links a {
-      color: #5c7bff;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .2s, border-bottom .2s;
-      font-family: inherit;
-    }
-    .footer-links a:hover {
-      color: #fff9cc;
-      border-bottom: 1px solid #5c7bff;
-    }
-    .footer-title {
-      font-weight: bold;
-      margin-bottom: 0.2em;
-      font-size: 0.99em;
-      color: #fff;
-      font-family: inherit;
-    }
-    .footer-note {
-      color: #b5bad2;
-      font-size: 0.97em;
-      margin-top: 0.6em;
-      font-family: inherit;
-    }
-    @media (max-width: 900px) {
-      main { margin-top: 36px; }
-      .logo { padding-left: 14px; }
-    }
     @media (max-width: 700px) {
-      main { margin-top: 20px; padding: 0 4px; max-width: 100vw; }
-      .cards-row { gap: 18px; }
-      .card { max-width: 98vw; padding: 20px 4vw 18px 4vw; }
-      header { height: 44px; }
-      .logo { font-size: 1em; height: 44px; padding-left: 6px; }
-    }
-    #star-canvas {
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      min-width: 100vw; min-height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-      display: block;
+      .splash-text { margin-top: 4vh; margin-left: 4vw; }
+      .splash-line { font-size: 1.5em; }
+      .splash-tip { font-size: 0.95em; }
+      .card { padding: 20px 4vw 18px 4vw; }
     }
   </style>
 </head>
-<body class="night">
-  <!-- 动态夜空星空canvas -->
+<body>
+  <!-- 星空canvas -->
   <canvas id="star-canvas"></canvas>
-  <header>
-    <div class="logo">
-      <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">
-        AEOLIAN_SAND™
-      </a>
+  <!-- 第一页：诗句 -->
+  <div id="page1" class="page">
+    <div class="splash-text">
+      <div class="splash-line">大鹏一日同风起，</div>
+      <div class="splash-line">扶摇直上九万里。</div>
+      <div class="splash-tip">上滑进入主页</div>
     </div>
-  </header>
-  <main>
+  </div>
+  <!-- 第二页：卡片主页 -->
+  <div id="page2" class="page hide">
     <div class="cards-row">
       <div class="card">
         <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
@@ -248,7 +166,6 @@
         </div>
         <a href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener" class="card-link">查看详情&gt;</a>
       </div>
-      <!-- 第三张卡片 彩蛋 -->
       <div class="card" id="egg-card">
         <div class="card-title" id="egg-title">彩蛋。</div>
         <div class="card-content" id="egg-content">
@@ -256,24 +173,45 @@
         </div>
       </div>
     </div>
-  </main>
-  <footer>
-    <div class="footer-links">
-      <div class="footer-title">相关网站</div>
-      <ul>
-        <li>
-          <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
-        </li>
-        <li>
-          <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
-        </li>
-      </ul>
-      <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
-    </div>
-    <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
-  </footer>
+  </div>
   <script>
-    // 只显示星空
+    // 切换页面，只有上滑（鼠标滚轮向上或手指上滑）才切换
+    (function() {
+      const page1 = document.getElementById('page1');
+      const page2 = document.getElementById('page2');
+
+      // PC端：监听滚轮（wheel）事件
+      let wheelLocked = false;
+      page1.addEventListener('wheel', function(e) {
+        if (wheelLocked) return;
+        if (e.deltaY < -30) { // 只有“向上滑/滚”才触发
+          wheelLocked = true;
+          page1.classList.add('hide');
+          page2.classList.remove('hide');
+          setTimeout(() => { wheelLocked = false; }, 1000);
+        }
+      }, { passive: false });
+
+      // 移动端：监听touch事件
+      let startY = null;
+      page1.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) {
+          startY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      page1.addEventListener('touchend', function(e) {
+        if (startY === null) return;
+        const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
+        if (startY - endY > 60) { // 手指向上滑超过60px
+          page1.classList.add('hide');
+          page2.classList.remove('hide');
+        }
+        startY = null;
+      }, { passive: true });
+    })();
+
+    // 星空动画
     function StarField(canvas, options) {
       options = options || {};
       this.canvas = canvas;
@@ -340,8 +278,6 @@
       this.init();
     }
     window.addEventListener('DOMContentLoaded', function() {
-      document.body.classList.add('fade-in');
-      // 动态夜空星空
       const canvas = document.getElementById('star-canvas');
       new StarField(canvas, {
         numStars: window.innerWidth < 700 ? 120 : 200
