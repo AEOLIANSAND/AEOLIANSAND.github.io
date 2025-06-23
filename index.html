@@ -18,17 +18,58 @@
       z-index: 0;
       pointer-events: none;
     }
-    .page {
-      position: absolute;
+    header {
+      width: 100vw;
+      height: 56px;
+      position: fixed;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      z-index: 10;
+      background: rgba(30, 32, 43, 0.40);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09);
+      border-bottom: 1.5px solid rgba(255,255,255,0.13);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transition: background 0.3s;
+      user-select: none;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.2em;
+      letter-spacing: 1.5px;
+      padding: 0 0 0 32px;
+      height: 56px;
+      color: #fff;
+      font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      mix-blend-mode: lighten;
+    }
+    .logo a {
+      color: inherit;
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.2em 0;
+    }
+
+    /* 页面内容层级 */
+    .page {
+      position: fixed;
+      top: 56px; left: 0;
+      width: 100vw;
+      height: calc(100vh - 56px);
+      min-height: 0;
+      background: transparent;
+      z-index: 2;
+      transition: opacity 0.6s cubic-bezier(.4,0,.2,1), visibility 0.6s;
+      will-change: opacity;
+      overflow: hidden;
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
-      z-index: 1;
-      transition: opacity 0.6s cubic-bezier(.4,0,.2,1), visibility 0.6s;
-      background: transparent;
-      will-change: opacity;
     }
     .page.hide {
       opacity: 0;
@@ -36,7 +77,7 @@
       pointer-events: none;
     }
     .splash-text {
-      margin-top: 12vh;
+      margin-top: 8vh;
       margin-left: 8vw;
       display: flex;
       flex-direction: column;
@@ -60,9 +101,10 @@
       letter-spacing: 1px;
       user-select: none;
     }
+
     .cards-row {
       width: 100vw;
-      height: 100vh;
+      min-height: calc(100vh - 56px - 160px); /* 保证footer在底部，footer高度约100-160px */
       display: flex;
       flex-direction: column;
       gap: 36px;
@@ -71,7 +113,7 @@
       background: none;
       position: relative;
       z-index: 2;
-      overflow: visible;
+      margin-bottom: 0;
     }
     .card {
       width: 92vw;
@@ -131,6 +173,72 @@
       color: #fff9cc;
       border-bottom: 1px solid #4d7fff;
     }
+
+    footer {
+      background: rgba(30, 32, 43, 0.20);
+      backdrop-filter: blur(10px) saturate(150%);
+      -webkit-backdrop-filter: blur(10px) saturate(150%);
+      color: #d0d0e8;
+      text-align: center;
+      padding: 2em 0 1.2em 0;
+      font-size: 1em;
+      letter-spacing: 1px;
+      border-top: 1px solid #222c35;
+      box-shadow: none;
+      width: 100vw;
+      position: static;
+      left: 0; bottom: 0;
+      z-index: 10;
+      margin: 0;
+    }
+    .footer-links {
+      font-size: 0.99em;
+      font-family: "Microsoft YaHei", "微软雅黑", "Segoe UI", Arial, sans-serif;
+      color: #b5bad2;
+      text-align: center;
+      margin-bottom: 1.2em;
+      letter-spacing: 0.3px;
+    }
+    .footer-links ul {
+      padding-left: 0;
+      list-style: none;
+      margin: 0.4em 0;
+    }
+    .footer-links li {
+      display: inline-block;
+      margin: 0 0.9em 0 0;
+      font-size: 0.99em;
+    }
+    .footer-links a {
+      color: #5c7bff;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .2s, border-bottom .2s;
+      font-family: inherit;
+    }
+    .footer-links a:hover {
+      color: #fff9cc;
+      border-bottom: 1px solid #5c7bff;
+    }
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 0.2em;
+      font-size: 0.99em;
+      color: #fff;
+      font-family: inherit;
+    }
+    .footer-note {
+      color: #b5bad2;
+      font-size: 0.97em;
+      margin-top: 0.6em;
+      font-family: inherit;
+    }
+
+    @media (max-width: 900px) {
+      header { height: 44px; }
+      .logo { font-size: 1em; height: 44px; padding-left: 6px; }
+      .page { top: 44px; height: calc(100vh - 44px);}
+    }
     @media (max-width: 700px) {
       .splash-text { margin-top: 4vh; margin-left: 4vw; }
       .splash-line { font-size: 1.5em; }
@@ -142,16 +250,24 @@
 <body>
   <!-- 星空canvas -->
   <canvas id="star-canvas"></canvas>
+  <!-- LOGO栏 -->
+  <header>
+    <div class="logo">
+      <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">
+        AEOLIAN_SAND™
+      </a>
+    </div>
+  </header>
   <!-- 第一页：诗句 -->
   <div id="page1" class="page">
     <div class="splash-text">
       <div class="splash-line">大鹏一日同风起，</div>
       <div class="splash-line">扶摇直上九万里。</div>
-      <div class="splash-tip">上滑进入主页</div>
+      <div class="splash-tip">下滑或上滑进入主页</div>
     </div>
   </div>
   <!-- 第二页：卡片主页 -->
-  <div id="page2" class="page hide">
+  <div id="page2" class="page hide" style="flex-direction:column;">
     <div class="cards-row">
       <div class="card">
         <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
@@ -173,41 +289,73 @@
         </div>
       </div>
     </div>
+    <footer>
+      <div class="footer-links">
+        <div class="footer-title">相关网站</div>
+        <ul>
+          <li>
+            <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+          </li>
+          <li>
+            <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+          </li>
+        </ul>
+        <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+      </div>
+      <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
+    </footer>
   </div>
   <script>
-    // 切换页面，只有上滑（鼠标滚轮向上或手指上滑）才切换
+    // 页面切换逻辑：第一页下滚/上滑进主页，主页上滚/下滑回第一页
     (function() {
       const page1 = document.getElementById('page1');
       const page2 = document.getElementById('page2');
-
-      // PC端：监听滚轮（wheel）事件
       let wheelLocked = false;
+      // 第一页滚轮/触摸
       page1.addEventListener('wheel', function(e) {
         if (wheelLocked) return;
-        if (e.deltaY < -30) { // 只有“向上滑/滚”才触发
+        if (e.deltaY > 30) { // 向下滚动
           wheelLocked = true;
           page1.classList.add('hide');
           page2.classList.remove('hide');
-          setTimeout(() => { wheelLocked = false; }, 1000);
+          setTimeout(() => { wheelLocked = false; }, 800);
         }
       }, { passive: false });
-
-      // 移动端：监听touch事件
-      let startY = null;
+      let startY1 = null;
       page1.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 1) {
-          startY = e.touches[0].clientY;
-        }
+        if (e.touches.length === 1) startY1 = e.touches[0].clientY;
       }, { passive: true });
-
       page1.addEventListener('touchend', function(e) {
-        if (startY === null) return;
+        if (startY1 === null) return;
         const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
-        if (startY - endY > 60) { // 手指向上滑超过60px
+        if (startY1 - endY > 60) { // 上滑
           page1.classList.add('hide');
           page2.classList.remove('hide');
         }
-        startY = null;
+        startY1 = null;
+      }, { passive: true });
+      // 第二页滚轮/触摸
+      page2.addEventListener('wheel', function(e) {
+        if (wheelLocked) return;
+        if (e.deltaY < -30) { // 向上滚动
+          wheelLocked = true;
+          page2.classList.add('hide');
+          page1.classList.remove('hide');
+          setTimeout(() => { wheelLocked = false; }, 800);
+        }
+      }, { passive: false });
+      let startY2 = null;
+      page2.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) startY2 = e.touches[0].clientY;
+      }, { passive: true });
+      page2.addEventListener('touchend', function(e) {
+        if (startY2 === null) return;
+        const endY = (e.changedTouches && e.changedTouches[0].clientY) || 0;
+        if (endY - startY2 > 60) { // 下滑
+          page2.classList.add('hide');
+          page1.classList.remove('hide');
+        }
+        startY2 = null;
       }, { passive: true });
     })();
 
@@ -218,12 +366,10 @@
       this.ctx = canvas.getContext('2d');
       this.stars = [];
       this.numStars = options.numStars || (window.innerWidth < 700 ? 120 : 200);
-
       this.resize = () => {
         this.w = this.canvas.width = window.innerWidth;
         this.h = this.canvas.height = window.innerHeight;
       };
-
       this.createStars = () => {
         this.stars = [];
         for (let i = 0; i < this.numStars; i++) {
@@ -237,7 +383,6 @@
           });
         }
       };
-
       this.draw = () => {
         this.ctx.clearRect(0, 0, this.w, this.h);
         for (let i = 0; i < this.stars.length; i++) {
@@ -259,18 +404,15 @@
           if (s.y > this.h) s.y = 0;
         }
       };
-
       this.animate = () => {
         this.draw();
         requestAnimationFrame(this.animate);
       };
-
       this.init = () => {
         this.resize();
         this.createStars();
         this.animate();
       };
-
       window.addEventListener('resize', () => {
         this.resize();
         this.createStars();
@@ -282,7 +424,6 @@
       new StarField(canvas, {
         numStars: window.innerWidth < 700 ? 120 : 200
       });
-
       // 彩蛋计数器
       const eggLink = document.getElementById('egg-link');
       const eggTitle = document.getElementById('egg-title');
