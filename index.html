@@ -2,9 +2,9 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>AEOLIAN_SAND™ 官网</title>
+  <title>AEOLIAN_SAND网站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AEOLIAN_SAND™ 官网 - 个人主页，包含Bilibili、GitHub等相关链接。">
+  <meta name="description" content="AEOLIAN_SAND网站 - 个人主页，包含Bilibili、GitHub等相关链接。">
   <style>
     :root {
       --logo-color: #fff;
@@ -27,7 +27,6 @@
     }
     body.fade-in { opacity: 1; }
 
-    /* 液态玻璃LOGO栏 */
     header {
       width: 100%;
       height: 56px;
@@ -89,11 +88,13 @@
       max-width: 520px;
       min-width: 0;
       margin: 0 auto;
-      background: rgba(255,255,255,0.16);
+      background: rgba(34,38,65,0.92);
       backdrop-filter: blur(18px) saturate(170%);
       -webkit-backdrop-filter: blur(18px) saturate(170%);
-      border: 1.5px solid rgba(255,255,255,0.32);
-      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow:
+        0 8px 32px 0 rgba(0,0,0,0.32),
+        0 2px 8px rgba(0,0,0,0.18),
+        0 1.5px 6px rgba(60,100,255,0.13);
       border-radius: 16px;
       padding: 36px 32px 28px 32px;
       display: flex;
@@ -107,12 +108,12 @@
     .card-title {
       font-size: 1.22em;
       font-weight: 700;
-      color: #21234e;
+      color: #fff;
       margin-bottom: 0.7em;
       letter-spacing: 1px;
       line-height: 1.3;
-      text-shadow: 0 2px 12px rgba(255,255,255,0.18);
-      border-bottom: 1.5px solid rgba(30,34,64,0.12);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.24);
+      border-bottom: 1.5px solid rgba(255,255,255,0.12);
       padding-bottom: 0.32em;
       width: 100%;
       box-sizing: border-box;
@@ -120,16 +121,16 @@
     .card-content {
       font-size: 1.08em;
       font-weight: 400;
-      color: #23272f;
+      color: #fff;
       margin-top: 0;
       line-height: 1.9;
-      text-shadow: 0 1px 8px rgba(255,255,255,0.12);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.19);
       width: 100%;
       box-sizing: border-box;
     }
-    .card-link {
+    .card-link, .egg-link {
       display: block;
-      color: #5c7bff;
+      color: #a5c8ff;
       margin-top: 0.7em;
       text-decoration: none;
       font-size: 1em;
@@ -137,8 +138,10 @@
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
       border-bottom: 1px solid transparent;
       transition: color .2s, border-bottom .2s;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.16);
+      cursor: pointer;
     }
-    .card-link:hover {
+    .card-link:hover, .egg-link:hover {
       color: #fff9cc;
       border-bottom: 1px solid #5c7bff;
     }
@@ -209,7 +212,6 @@
       header { height: 44px; }
       .logo { font-size: 1em; height: 44px; padding-left: 6px; }
     }
-    /* 让canvas全屏自适应 */
     #star-canvas {
       position: fixed;
       left: 0; top: 0;
@@ -246,6 +248,13 @@
         </div>
         <a href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener" class="card-link">查看详情&gt;</a>
       </div>
+      <!-- 第三张卡片 彩蛋 -->
+      <div class="card" id="egg-card">
+        <div class="card-title" id="egg-title">彩蛋。</div>
+        <div class="card-content" id="egg-content">
+          <span class="egg-link" id="egg-link">点击此处&gt;</span>
+        </div>
+      </div>
     </div>
   </main>
   <footer>
@@ -273,10 +282,12 @@
       this.meteors = [];
       this.numStars = options.numStars || (window.innerWidth < 700 ? 60 : 120);
       this.numMeteors = options.numMeteors || 3;
+
       this.resize = () => {
         this.w = this.canvas.width = window.innerWidth;
         this.h = this.canvas.height = window.innerHeight;
       };
+
       this.createStars = () => {
         this.stars = [];
         for (let i = 0; i < this.numStars; i++) {
@@ -290,13 +301,8 @@
           });
         }
       };
-      this.createMeteors = () => {
-        this.meteors = [];
-        for (let i = 0; i < this.numMeteors; i++) {
-          this.meteors.push(this.randomMeteor());
-        }
-      };
-      this.randomMeteor = () => {
+
+      this.randomMeteor = (delay=0) => {
         let angle = Math.PI / 2.5 + Math.random() * (Math.PI/6); // 60-80度
         let speed = 7 + Math.random() * 3;
         let len = 140 + Math.random() * 80;
@@ -311,11 +317,20 @@
           alpha: 0.7 + Math.random() * 0.3,
           width: 1.2 + Math.random() * 1.2,
           life: 0,
-          maxLife: 40 + Math.random() * 30
+          maxLife: 40 + Math.random() * 30,
+          delay: delay
         }
       };
+
+      this.createMeteors = () => {
+        this.meteors = [];
+        for (let i = 0; i < this.numMeteors; i++) {
+          let delay = Math.floor((i * 15) + Math.random() * 10);
+          this.meteors.push(this.randomMeteor(delay));
+        }
+      };
+
       this.draw = () => {
-        // 绘制星星
         this.ctx.clearRect(0, 0, this.w, this.h);
         for (let i = 0; i < this.stars.length; i++) {
           let s = this.stars[i];
@@ -335,8 +350,11 @@
           if (s.y < 0) s.y = this.h;
           if (s.y > this.h) s.y = 0;
         }
-        // 绘制流星
         for (let m of this.meteors) {
+          if (m.delay > 0) {
+            m.delay--;
+            continue;
+          }
           let grad = this.ctx.createLinearGradient(m.x, m.y, m.x-m.dx*m.len, m.y-m.dy*m.len);
           grad.addColorStop(0, `rgba(255,255,255,${m.alpha})`);
           grad.addColorStop(0.15, `rgba(180,200,255,${m.alpha*0.6})`);
@@ -355,25 +373,28 @@
           m.x += m.dx;
           m.y += m.dy;
           m.life += 1;
-          // 重新生成流星
           if (
             m.x < -m.len || m.x > this.w + m.len ||
             m.y > this.h + 100 || m.life > m.maxLife
           ) {
-            Object.assign(m, this.randomMeteor());
+            let newDelay = Math.floor(15 + Math.random() * 20);
+            Object.assign(m, this.randomMeteor(newDelay));
           }
         }
       };
+
       this.animate = () => {
         this.draw();
         requestAnimationFrame(this.animate);
       };
+
       this.init = () => {
         this.resize();
         this.createStars();
         this.createMeteors();
         this.animate();
       };
+
       window.addEventListener('resize', () => {
         this.resize();
         this.createStars();
@@ -388,6 +409,29 @@
       new StarField(canvas, {
         numStars: window.innerWidth < 700 ? 60 : 120,
         numMeteors: window.innerWidth < 700 ? 1 : 3
+      });
+
+      // 彩蛋计数器
+      const eggLink = document.getElementById('egg-link');
+      const eggTitle = document.getElementById('egg-title');
+      const eggContent = document.getElementById('egg-content');
+      let revealed = false;
+
+      eggLink.addEventListener('click', function() {
+        if (revealed) return;
+        revealed = true;
+        // 使用 jsdelivr 的计数API，首次点击才请求
+        fetch('https://api.countapi.xyz/hit/aeoliansand.github.io/egg')
+          .then(r => r.json())
+          .then(data => {
+            const count = data.value;
+            eggTitle.textContent = "你打开了新大陆。";
+            eggContent.innerHTML = `你是第${count}个访问AEOLIAN_SAND网站的人`;
+          })
+          .catch(() => {
+            eggTitle.textContent = "你打开了新大陆。";
+            eggContent.innerHTML = "你是第1个访问AEOLIAN_SAND网站的人";
+          });
       });
     });
   </script>
