@@ -6,16 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="AEOLIAN_SAND™ 官网 - 个人主页，包含Bilibili、GitHub等相关链接。">
   <style>
-    :root {
-      --logo-color: #101010; /* 默认深色 */
-    }
-    body.night {
-      --logo-color: #fff;    /* 夜色LOGO变浅 */
-    }
+    :root { --logo-color: #101010; }
+    body.night { --logo-color: #fff; }
     html, body {
-      padding: 0;
-      margin: 0;
-      height: 100%;
+      padding: 0; margin: 0; height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
       font-weight: 400;
       transition: background 0.3s;
@@ -24,262 +18,128 @@
       min-height: 100vh;
       opacity: 0;
       transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      /* 多彩星云星空渐变底色 */
+      background:
+        radial-gradient(ellipse at 25% 20%, #ffccf9 0%, transparent 60%),
+        radial-gradient(ellipse at 60% 15%, #aeefff 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 70%, #b5ffd9 0%, transparent 65%),
+        radial-gradient(ellipse at 30% 80%, #eecfff 0%, transparent 70%),
+        radial-gradient(ellipse at 80% 40%, #fff6c9 0%, transparent 65%),
+        linear-gradient(180deg, #0b0430 0%, #2a2957 100%);
       position: relative;
       overflow-x: hidden;
     }
-    body.fade-in {
-      opacity: 1;
-    }
-    .night-bg {
+    body.fade-in { opacity: 1; }
+    /* 动态星空canvas */
+    #star-canvas {
       position: fixed;
-      left: 50%;
-      top: 8vw;
-      width: 420px;
-      height: 250px;
-      z-index: 0;
+      left: 0; top: 0; width: 100vw; height: 100vh;
       pointer-events: none;
-      transform: translateX(-50%);
+      z-index: 0;
+      display: block;
     }
-    header, main, footer {
-      position: relative;
-      z-index: 1;
-    }
+    header, main, footer { position: relative; z-index: 1; }
     header {
-      width: 100%;
-      height: 56px;
+      width: 100%; height: 56px;
       background: transparent;
       border-bottom: 1px solid #222c35;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      position: relative;
-      z-index: 10;
+      display: flex; align-items: center; justify-content: flex-start;
+      position: relative; z-index: 10;
       box-shadow: none;
       transition: background 0.3s;
     }
     .logo {
-      font-weight: 800;
-      font-size: 1.2em;
-      letter-spacing: 1.5px;
-      user-select: none;
-      margin: 0;
+      font-weight: 800; font-size: 1.2em;
+      letter-spacing: 1.5px; user-select: none; margin: 0;
       padding: 0 0 0 32px;
-      display: flex;
-      align-items: center;
-      height: 56px;
+      display: flex; align-items: center; height: 56px;
       color: var(--logo-color);
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
       transition: color 0.3s;
-      mix-blend-mode: lighten; /* 让LOGO在深色背景下更亮 */
+      mix-blend-mode: lighten;
     }
     .logo a {
-      color: inherit;
-      text-decoration: none;
-      display: inline-block;
-      padding: 0.2em 0;
+      color: inherit; text-decoration: none; display: inline-block; padding: 0.2em 0;
     }
     main {
-      width: 100%;
-      max-width: 1000px;
-      margin: 60px auto 0 auto;
-      padding: 0 16px;
-      background: none;
-      box-shadow: none;
-      border-radius: 0;
-      min-height: 300px;
+      width: 100%; max-width: 1000px;
+      margin: 60px auto 0 auto; padding: 0 16px;
+      background: none; box-shadow: none;
+      border-radius: 0; min-height: 300px;
     }
     .cards-row {
-      display: flex;
-      flex-direction: column;
-      gap: 36px;
-      width: 100%;
+      display: flex; flex-direction: column; gap: 36px; width: 100%;
     }
     .card {
-      width: 100%;
-      max-width: 520px;
-      min-width: 0;
-      margin: 0 auto;
-      background: rgba(22,28,41,0.82);
-      backdrop-filter: blur(16px) saturate(130%);
-      -webkit-backdrop-filter: blur(16px) saturate(130%);
-      border: 1px solid rgba(255,255,255,0.13);
-      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.10);
-      border-radius: 12px;
+      width: 100%; max-width: 520px; min-width: 0; margin: 0 auto;
+      background: rgba(255,255,255,0.20);
+      backdrop-filter: blur(18px) saturate(170%);
+      -webkit-backdrop-filter: blur(18px) saturate(170%);
+      border: 1.5px solid rgba(255,255,255,0.45);
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 16px;
       padding: 36px 32px 28px 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      box-sizing: border-box;
-      min-height: 180px;
-      height: auto;
+      display: flex; flex-direction: column; align-items: flex-start;
+      box-sizing: border-box; min-height: 180px; height: auto;
       transition: box-shadow 0.25s cubic-bezier(.4,0,.2,1), background 0.25s cubic-bezier(.4,0,.2,1);
     }
     .card-title {
-      font-size: 1.32em;
-      font-weight: 700;
-      margin-bottom: 1em;
-      color: #fff;
-      letter-spacing: 1px;
-      font-family: "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
+      color: #20232a;
+      text-shadow: 0 2px 12px rgba(255,255,255,0.25);
     }
     .card-content {
-      font-size: 1.09em;
-      font-weight: 400;
-      color: #e4e6ed;
-      font-family: "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
-      line-height: 1.9;
-      margin-bottom: 0.8em;
-      word-break: break-all;
+      color: #23272f;
+      text-shadow: 0 1px 8px rgba(255,255,255,0.18);
     }
     .card-link {
-      display: block;
-      color: #ffe475;
-      margin-top: 0.7em;
-      text-decoration: none;
-      font-size: 1em;
-      font-weight: 500;
+      display: block; color: #5c7bff; margin-top: 0.7em;
+      text-decoration: none; font-size: 1em; font-weight: 500;
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
       border-bottom: 1px solid transparent;
       transition: color .2s, border-bottom .2s;
     }
     .card-link:hover {
-      color: #fff9cc;
-      border-bottom: 1px solid #ffe475;
+      color: #fff9cc; border-bottom: 1px solid #5c7bff;
     }
     footer {
-      background: transparent;
-      color: #86868b;
-      text-align: center;
-      padding: 2em 0 1.2em 0;
-      margin-top: 3.5em;
-      font-size: 1em;
-      letter-spacing: 1px;
-      border-top: 1px solid #222c35;
-      box-shadow: none;
+      background: transparent; color: #86868b; text-align: center;
+      padding: 2em 0 1.2em 0; margin-top: 3.5em; font-size: 1em; letter-spacing: 1px;
+      border-top: 1px solid #222c35; box-shadow: none;
     }
     .footer-links {
       font-size: 0.99em;
       font-family: "Microsoft YaHei", "微软雅黑", "Segoe UI", Arial, sans-serif;
-      color: #86868b;
-      text-align: center;
-      margin-bottom: 1.2em;
-      letter-spacing: 0.3px;
+      color: #86868b; text-align: center; margin-bottom: 1.2em; letter-spacing: 0.3px;
     }
-    .footer-links ul {
-      padding-left: 0;
-      list-style: none;
-      margin: 0.4em 0;
-    }
-    .footer-links li {
-      display: inline-block;
-      margin: 0 0.9em 0 0;
-      font-size: 0.99em;
-    }
+    .footer-links ul { padding-left: 0; list-style: none; margin: 0.4em 0; }
+    .footer-links li { display: inline-block; margin: 0 0.9em 0 0; font-size: 0.99em; }
     .footer-links a {
-      color: #ffe475;
-      text-decoration: none;
-      border-bottom: 1px solid transparent;
-      transition: color .2s, border-bottom .2s;
-      font-family: inherit;
+      color: #5c7bff; text-decoration: none; border-bottom: 1px solid transparent;
+      transition: color .2s, border-bottom .2s; font-family: inherit;
     }
-    .footer-links a:hover {
-      color: #fff9cc;
-      border-bottom: 1px solid #ffe475;
-    }
+    .footer-links a:hover { color: #fff9cc; border-bottom: 1px solid #5c7bff; }
     .footer-title {
-      font-weight: bold;
-      margin-bottom: 0.2em;
-      font-size: 0.99em;
-      color: #fff;
-      font-family: inherit;
+      font-weight: bold; margin-bottom: 0.2em; font-size: 0.99em; color: #fff; font-family: inherit;
     }
-    .footer-note {
-      color: #86868b;
-      font-size: 0.97em;
-      margin-top: 0.6em;
-      font-family: inherit;
-    }
+    .footer-note { color: #86868b; font-size: 0.97em; margin-top: 0.6em; font-family: inherit; }
     @media (max-width: 900px) {
-      main {
-        margin-top: 36px;
-      }
+      main { margin-top: 36px; }
       .logo { padding-left: 14px; }
     }
     @media (max-width: 700px) {
-      .night-bg {
-        width: 95vw;
-        height: 45vw;
-        top: 7vw;
-        left: 50vw;
-      }
-      main {
-        margin-top: 20px;
-        padding: 0 4px;
-        max-width: 100vw;
-      }
-      .cards-row {
-        gap: 18px;
-      }
-      .card {
-        max-width: 98vw;
-        padding: 20px 4vw 18px 4vw;
-      }
-      header {
-        height: 44px;
-      }
-      .logo {
-        font-size: 1em;
-        height: 44px;
-        padding-left: 6px;
-      }
+      main { margin-top: 20px; padding: 0 4px; max-width: 100vw; }
+      .cards-row { gap: 18px; }
+      .card { max-width: 98vw; padding: 20px 4vw 18px 4vw; }
+      header { height: 44px; }
+      .logo { font-size: 1em; height: 44px; padding-left: 6px; }
     }
   </style>
 </head>
 <body class="night">
-  <!-- 夜空中的人和光束SVG -->
-  <svg class="night-bg" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <!-- 星星 -->
-    <circle cx="50" cy="30" r="1.2" fill="#fff" opacity="0.8"/>
-    <circle cx="120" cy="80" r="0.8" fill="#fff" opacity="0.7"/>
-    <circle cx="250" cy="60" r="1.5" fill="#fff" opacity="1"/>
-    <circle cx="310" cy="40" r="1" fill="#fff" opacity="0.6"/>
-    <circle cx="370" cy="90" r="0.9" fill="#fff" opacity="0.8"/>
-    <circle cx="180" cy="30" r="0.7" fill="#fff" opacity="0.5"/>
-    <circle cx="210" cy="100" r="1.2" fill="#fff" opacity="0.7"/>
-    <circle cx="320" cy="110" r="1.1" fill="#fff" opacity="0.8"/>
-    <circle cx="50" cy="180" r="1.0" fill="#fff" opacity="0.6"/>
-    <circle cx="170" cy="40" r="0.9" fill="#fff" opacity="0.65"/>
-    <circle cx="340" cy="200" r="1.2" fill="#fff" opacity="0.75"/>
-    <circle cx="220" cy="215" r="0.5" fill="#fff" opacity="0.5"/>
-    <circle cx="70" cy="200" r="0.8" fill="#fff" opacity="0.7"/>
-    <!-- 光束 -->
-    <defs>
-      <radialGradient id="beamGradient" cx="0.5" cy="0" r="1" fx="0.5" fy="0" gradientTransform="matrix(1 0 0 0.5 0 0)">
-        <stop offset="0%" stop-color="#fff9cc" stop-opacity="0.95"/>
-        <stop offset="80%" stop-color="#fff9cc" stop-opacity="0.16"/>
-        <stop offset="100%" stop-color="#fff9cc" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-    <ellipse id="beam" cx="200" cy="80" rx="70" ry="130" fill="url(#beamGradient)" opacity="0.88">
-      <animate attributeName="opacity" values="0.88;0.75;0.88" dur="2.6s" repeatCount="indefinite"/>
-    </ellipse>
-    <!-- 人的剪影 -->
-    <!-- 头部 -->
-    <ellipse cx="200" cy="155" rx="13" ry="13" fill="#161616"/>
-    <!-- 身体 -->
-    <rect x="190" y="168" width="20" height="40" rx="7" fill="#111"/>
-    <!-- 左腿 -->
-    <rect x="192" y="208" width="6" height="28" rx="2.5" fill="#181818" transform="rotate(-8 192 208)"/>
-    <!-- 右腿 -->
-    <rect x="202" y="208" width="6" height="28" rx="2.5" fill="#181818" transform="rotate(7 202 208)"/>
-    <!-- 左臂 -->
-    <rect x="185" y="178" width="5" height="22" rx="2" fill="#181818" transform="rotate(-25 185 178)"/>
-    <!-- 右臂 -->
-    <rect x="210" y="178" width="5" height="22" rx="2" fill="#181818" transform="rotate(25 210 178)"/>
-  </svg>
+  <!-- 动态星空canvas -->
+  <canvas id="star-canvas"></canvas>
   <header>
     <div class="logo">
       <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">
@@ -320,9 +180,73 @@
     <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
   </footer>
   <script>
+    // 动态星空
+    function StarField(canvas, numStars) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.stars = [];
+      this.numStars = numStars || 130;
+      this.resize = () => {
+        this.w = this.canvas.width = window.innerWidth;
+        this.h = this.canvas.height = window.innerHeight;
+      };
+      this.createStars = () => {
+        this.stars = [];
+        for (let i = 0; i < this.numStars; i++) {
+          this.stars.push({
+            x: Math.random() * this.w,
+            y: Math.random() * this.h,
+            r: Math.random() * 1.4 + 0.3,
+            speed: Math.random() * 0.08 + 0.02,
+            twinkle: Math.random() * Math.PI * 2,
+            opacity: Math.random() * 0.8 + 0.2
+          });
+        }
+      };
+      this.draw = () => {
+        this.ctx.clearRect(0, 0, this.w, this.h);
+        for (let i = 0; i < this.stars.length; i++) {
+          let s = this.stars[i];
+          // twinkle
+          let tw = 0.5 + 0.5 * Math.sin(s.twinkle + Date.now() * 0.0014 + i);
+          let o = s.opacity * tw;
+          this.ctx.beginPath();
+          this.ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2, false);
+          this.ctx.fillStyle = "rgba(255,255,255," + o + ")";
+          this.ctx.shadowColor = "#fff";
+          this.ctx.shadowBlur = 7 * o;
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+          // 移动（微小漂移）
+          s.x += Math.cos(s.twinkle) * s.speed * 0.33;
+          s.y += Math.sin(s.twinkle) * s.speed * 0.33;
+          if (s.x < 0) s.x = this.w;
+          if (s.x > this.w) s.x = 0;
+          if (s.y < 0) s.y = this.h;
+          if (s.y > this.h) s.y = 0;
+        }
+      };
+      this.animate = () => {
+        this.draw();
+        requestAnimationFrame(this.animate);
+      };
+      this.init = () => {
+        this.resize();
+        this.createStars();
+        this.animate();
+      };
+      window.addEventListener('resize', () => {
+        this.resize();
+        this.createStars();
+      });
+      this.init();
+    }
+
     window.addEventListener('DOMContentLoaded', function() {
       document.body.classList.add('fade-in');
-      // 只需 night 类时 LOGO 就是亮色，白天可移除 .night。
+      // 启动星空
+      const canvas = document.getElementById('star-canvas');
+      new StarField(canvas, window.innerWidth < 700 ? 60 : 130);
     });
   </script>
 </body>
