@@ -88,14 +88,15 @@
       max-width: 520px;
       min-width: 0;
       margin: 0 auto;
-      background: rgba(34,38,65,0.92);
-      backdrop-filter: blur(18px) saturate(170%);
-      -webkit-backdrop-filter: blur(18px) saturate(170%);
+      background: rgba(255,255,255,0.34);         /* 亚克力半透明白色 */
+      backdrop-filter: blur(21px) saturate(180%);
+      -webkit-backdrop-filter: blur(21px) saturate(180%);
+      border-radius: 18px;
       box-shadow:
-        0 8px 32px 0 rgba(0,0,0,0.32),
-        0 2px 8px rgba(0,0,0,0.18),
-        0 1.5px 6px rgba(60,100,255,0.13);
-      border-radius: 16px;
+        0 8px 32px 0 rgba(0,0,0,0.18),
+        0 2px 8px rgba(0,0,0,0.10),
+        0 1.5px 6px rgba(60,100,255,0.10);
+      border: 1.5px solid rgba(255,255,255,0.55);
       padding: 36px 32px 28px 32px;
       display: flex;
       flex-direction: column;
@@ -108,12 +109,12 @@
     .card-title {
       font-size: 1.22em;
       font-weight: 700;
-      color: #fff;
+      color: #1a2340;
       margin-bottom: 0.7em;
       letter-spacing: 1px;
       line-height: 1.3;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.24);
-      border-bottom: 1.5px solid rgba(255,255,255,0.12);
+      text-shadow: 0 2px 12px rgba(255,255,255,0.12);
+      border-bottom: 1.5px solid rgba(30,34,64,0.08);
       padding-bottom: 0.32em;
       width: 100%;
       box-sizing: border-box;
@@ -121,16 +122,16 @@
     .card-content {
       font-size: 1.08em;
       font-weight: 400;
-      color: #fff;
+      color: #19213a;
       margin-top: 0;
       line-height: 1.9;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.19);
+      text-shadow: 0 1px 8px rgba(255,255,255,0.08);
       width: 100%;
       box-sizing: border-box;
     }
     .card-link, .egg-link {
       display: block;
-      color: #a5c8ff;
+      color: #4d7fff;
       margin-top: 0.7em;
       text-decoration: none;
       font-size: 1em;
@@ -138,12 +139,12 @@
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", Arial, sans-serif;
       border-bottom: 1px solid transparent;
       transition: color .2s, border-bottom .2s;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.16);
+      text-shadow: 0 1px 8px rgba(255,255,255,0.08);
       cursor: pointer;
     }
     .card-link:hover, .egg-link:hover {
-      color: #fff9cc;
-      border-bottom: 1px solid #5c7bff;
+      color: #2b387a;
+      border-bottom: 1px solid #4d7fff;
     }
 
     footer {
@@ -416,11 +417,9 @@
       const eggTitle = document.getElementById('egg-title');
       const eggContent = document.getElementById('egg-content');
       let revealed = false;
-
       eggLink.addEventListener('click', function() {
         if (revealed) return;
         revealed = true;
-        // 使用 jsdelivr 的计数API，首次点击才请求
         fetch('https://api.countapi.xyz/hit/aeoliansand.github.io/egg')
           .then(r => r.json())
           .then(data => {
