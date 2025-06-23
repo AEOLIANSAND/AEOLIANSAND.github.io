@@ -69,7 +69,6 @@
       display: inline-block;
       padding: 0.2em 0;
     }
-
     main {
       width: 100%;
       max-width: 900px;
@@ -83,12 +82,14 @@
     .cards-row {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: stretch;
       gap: 36px;
+      width: 100%;
     }
     .card {
-      flex: 1 1 340px;
-      max-width: 420px;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 100%;
       background: var(--white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -96,14 +97,13 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      min-width: 260px;
       min-height: 260px;
       box-sizing: border-box;
       transition: box-shadow var(--transition), background var(--transition);
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
     }
     .card-title {
-      font-size: 1.28em;
+      font-size: 1.32em;
       font-weight: 700;
       margin-bottom: 1em;
       color: var(--black);
