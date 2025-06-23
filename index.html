@@ -42,6 +42,17 @@
       font-size: 1.08em;
       border-radius: 8px;
     }
+    .notice-link {
+      color: #1677ff;
+      margin-left: 0.5em;
+      text-decoration: none;
+      font-weight: 400;
+      cursor: pointer;
+      transition: text-decoration 0.2s;
+    }
+    .notice-link:hover {
+      text-decoration: underline;
+    }
     h1 {
       letter-spacing: 2px;
       margin-bottom: 0.8em;
@@ -70,22 +81,22 @@
       position: absolute;
       top: 22px;
       right: 30px;
-      background: transparent;    /* 去掉背景色 */
+      background: transparent;
       border-radius: 8px;
-      box-shadow: none;           /* 去掉阴影 */
+      box-shadow: none;
       padding: 0.25em 0.9em;
       display: flex;
       flex-direction: row;
       gap: 1.2em;
       font-size: 0.98em;
-      color: #fff;                /* 字体改为白色 */
+      color: #fff;
       z-index: 100;
       font-family: "DengXian Light", "DengXian", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
       opacity: 0.98;
       transition: box-shadow 0.2s;
     }
     .time-bar:hover {
-      box-shadow: none;           /* 悬停时也无阴影 */
+      box-shadow: none;
     }
     .time-bar-col {
       min-width: 78px;
@@ -95,7 +106,7 @@
       font-weight: 300;
       font-family: "DengXian Light", "DengXian", "Microsoft YaHei Light", "Microsoft YaHei", Arial, sans-serif;
       font-size: 0.96em;
-      color: #fff;                /* 字体改为白色 */
+      color: #fff;
     }
     @media (max-width: 700px) {
       .time-bar {
@@ -129,6 +140,7 @@
   <main>
     <div class="notice">
       2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
+      <a href="https://www.bilibili.com/opus/1081561486291107849?spm_id_from=333.1387.0.0" target="_blank" rel="noopener" class="notice-link">查看详情&gt;</a>
     </div>
     <p>欢迎访问 AEOLIAN_SAND 网站。</p>
     <p>该网站还在建设中，敬请期待！</p>
