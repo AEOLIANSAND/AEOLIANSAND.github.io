@@ -1,4 +1,6 @@
-<html lang="zh-CN"><head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
   <title>关于 - AEOLIAN_SAND</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,7 +136,7 @@
     }
     .about-title {
       font-size: 2.1em;
-      font-weight: 600; /* 修改字体粗细为600 */
+      font-weight: 600;
       color: #fff;
       letter-spacing: 2px;
       margin-top: 48px;
@@ -159,7 +161,7 @@
       padding: 32px 36px 28px 36px;
       word-break: break-all;
       box-sizing: border-box;
-      text-indent: 2em; /* 首行空两格 */
+      text-indent: 2em;
       user-select: text;
     }
     @media (max-width:700px){
@@ -170,7 +172,6 @@
       .about-title { font-size:1.2em; margin-top:30px;margin-left:10px;}
       .about-content { font-size:1em; padding:16px 10px 12px 14px; margin-left:10px; width:90vw;max-width:98vw;}
     }
-    /* 底栏样式同主页 */
     #footer-outer {
       position: fixed;
       left: 0;
@@ -256,7 +257,7 @@
       <a href="index.html" class="menu-link">作品</a>
       <a href="index.html" class="menu-link">动态</a>
       <a href="index.html" class="menu-link">AEO-CLUB</a>
-      <a href="about.html" class="menu-link active">关于</a>
+      <a href="https://aeoliansand.github.io/about.index.html" class="menu-link active">关于</a>
     </nav>
   </header>
   <div class="about-container">
@@ -285,11 +286,9 @@
     </footer>
   </div>
   <script>
-    // 页面淡入效果
     window.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove('fadein-init');
     });
-    // 星空背景（将主页StarField类完整JS粘贴到这里即可）
     let starfield = null;
     class StarField {
       constructor(canvas, numStars) {
@@ -410,6 +409,5 @@
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
     });
   </script>
-
-
-    </body></html>
+</body>
+</html>
