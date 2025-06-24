@@ -52,7 +52,6 @@
       text-decoration: none;
       padding: 0.2em 0;
     }
-    /* 菜单栏居中偏右 */
     .main-menu {
       position: absolute;
       left: 55%;
@@ -257,17 +256,70 @@
       margin-bottom: 0.4em;
       transition: color 0.4s;
     }
+
+    /* --- 卡片滚动相关 --- */
+    .card-scroll-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100vw;
+      justify-content: center;
+      max-width: 100vw;
+      /* 避免按钮和溢出卡片被遮挡 */
+      overflow: visible;
+    }
     .cards-scroll-row {
       display: flex;
       flex-direction: row;
       gap: 32px;
       width: max-content;
+      max-width: 80vw;
       padding: 0 24vw;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       pointer-events: auto;
+      scrollbar-width: none;           /* Firefox */
+      -ms-overflow-style: none;        /* IE 10+ */
     }
+    .cards-scroll-row::-webkit-scrollbar {
+      display: none;                   /* Chrome/Safari/Opera */
+    }
+    .card-scroll-btn {
+      position: relative;
+      z-index: 5;
+      background: rgba(24,28,48,0.85);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      margin: 0 8px;
+      color: #fff;
+      font-size: 1.6em;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #0006;
+      transition: background .18s, opacity .18s;
+      opacity: 0.85;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-scroll-btn:active,
+    .card-scroll-btn:hover {
+      background: #4d7fff;
+      color: #fff;
+      opacity: 1;
+    }
+    .card-scroll-btn[disabled] {
+      opacity: 0.3;
+      cursor: default;
+    }
+    .cards-scroll-row {
+      /* 保证卡片内容不会被按钮覆盖 */
+      margin: 0 0;
+    }
+
     .card {
       flex: 0 0 320px;
       height: 320px;
@@ -325,20 +377,23 @@
       color: #fff9cc;
       border-bottom: 1px solid #4d7fff;
     }
-    /* footer只在需要时出现 */
+
+    /* footer推入动效 */
     #footer-outer {
-      display: none;
-      opacity: 0;
-      transition: opacity .5s;
       position: fixed;
       left: 0;
       bottom: 0;
       width: 100vw;
       z-index: 101;
+      transform: translateY(100%);
+      opacity: 1;
+      transition: transform 0.5s cubic-bezier(.7,0,.3,1);
+      will-change: transform;
+      pointer-events: none;
     }
     #footer-outer.footer-visible {
-      display: block;
-      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
     footer {
       background: rgba(30,32,43,0.20);
@@ -406,7 +461,7 @@
       .splash-line{font-size:1.5em;}
       .main-menu { left: 50%; gap: 0.6vw; transform: translateY(-50%) translateX(-20%);}
       .menu-link { font-size:0.9em; padding: 1px 3px;}
-      .cards-scroll-row { gap: 16px; padding:0 4vw;}
+      .cards-scroll-row { gap: 16px; padding:0 4vw; max-width:92vw;}
       .card { flex: 0 0 85vw; height: auto; min-width: 210px; padding: 20px 4vw 18px 4vw;}
     }
   </style>
@@ -470,11 +525,15 @@
           </div>`,
           fullscreen: true
         },
-        // 页2
+        // 页2（卡片带左右滑动按钮）
         {
           html: `<div class="page-content-outer">
-            <div class="cards-scroll-row">
-              ${cards2.join("")}
+            <div class="card-scroll-wrapper">
+              <button class="card-scroll-btn left" aria-label="左移">&#8592;</button>
+              <div class="cards-scroll-row">
+                ${cards2.join("")}
+              </div>
+              <button class="card-scroll-btn right" aria-label="右移">&#8594;</button>
             </div>
           </div>`
         },
@@ -586,6 +645,38 @@
       startY = null;
     },{passive:true});
     renderDots(0);
+
+    // ====== 卡片左右滑动按钮功能 ======
+    window.addEventListener('DOMContentLoaded', function() {
+      const wrappers = document.querySelectorAll('.card-scroll-wrapper');
+      wrappers.forEach(function(wrapper) {
+        const row = wrapper.querySelector('.cards-scroll-row');
+        const btnL = wrapper.querySelector('.card-scroll-btn.left');
+        const btnR = wrapper.querySelector('.card-scroll-btn.right');
+        const cards = row.querySelectorAll('.card');
+        // 取第一个卡片宽度做滚动单元（响应式）
+        function getScrollAmount() {
+          const card = row.querySelector('.card');
+          if(card) return Math.floor(card.offsetWidth + parseInt(getComputedStyle(row).gap||"32"));
+          return 320;
+        }
+        function updateBtnStatus() {
+          btnL.disabled = row.scrollLeft <= 0;
+          btnR.disabled = row.scrollLeft + row.offsetWidth >= row.scrollWidth - 3;
+        }
+        btnL.addEventListener('click', function() {
+          row.scrollBy({left: -getScrollAmount(), behavior: "smooth"});
+        });
+        btnR.addEventListener('click', function() {
+          row.scrollBy({left: getScrollAmount(), behavior: "smooth"});
+        });
+        row.addEventListener('scroll', updateBtnStatus);
+        // 初始化
+        updateBtnStatus();
+        // 保证窗口变化后按钮状态正确
+        window.addEventListener('resize', updateBtnStatus);
+      });
+    });
 
     // ====== 星空动画 ======
     let starfield = null;
