@@ -407,6 +407,8 @@
     window.addEventListener('DOMContentLoaded', function() {
       const canvas = document.getElementById('star-canvas');
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
+      // 让星星一加载就散开
+      starfield.setMode('spread');
     });
   </script>
 </body>
