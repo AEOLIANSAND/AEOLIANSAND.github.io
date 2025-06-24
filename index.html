@@ -465,31 +465,7 @@
       .cards-scroll-row { gap: 16px; padding:0 4vw; max-width:92vw;}
       .card { flex: 0 0 85vw; height: auto; min-width: 210px; padding: 20px 4vw 18px 4vw;}
     }
-    /* 手机端提示样式 */
-    #mobile-warning {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 99999;
-      background: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.3em;
-      text-align: center;
-    }
   </style>
-  <!-- 手机端访问提示，字体为白色 -->
-  <script>
-    if (/Android|webOS|iPhone|iPod|BlackBerry|iPad|Windows Phone|Mobile/i.test(navigator.userAgent)) {
-      document.write(
-        '<div id="mobile-warning">请在电脑端打开该网页以正常显示该页面。</div>'
-      );
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.display = "none";
-    }
-  </script>
 </head>
 <body class="fadein-init">
   <canvas id="star-canvas"></canvas>
