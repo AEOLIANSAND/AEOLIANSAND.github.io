@@ -222,6 +222,23 @@
         margin-top: 4vh;
       }
     }
+    /* 卡片按钮下方排列，间距适中 */
+    .card-scroll-btns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      margin-top: 14px;
+    }
+    .card-scroll-btn {
+      margin: 0;
+    }
+    @media (max-width:700px){
+      .card-scroll-btns {
+        gap: 12px;
+        margin-top: 8px;
+      }
+    }
     .pages-container {
       width: 100vw;
       height: 100vh;
@@ -321,6 +338,7 @@
     .card-scroll-wrapper {
       position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
       width: 100vw;
       justify-content: center;
@@ -352,7 +370,6 @@
       border-radius: 50%;
       width: 36px;
       height: 36px;
-      margin: 0 8px;
       color: #fff;
       font-size: 1.6em;
       cursor: pointer;
@@ -610,11 +627,13 @@
         {
           html: `<div class="page-content-outer">
             <div class="card-scroll-wrapper">
-              <button class="card-scroll-btn left" aria-label="左移">&#8592;</button>
               <div class="cards-scroll-row">
                 ${cards2.join("")}
               </div>
-              <button class="card-scroll-btn right" aria-label="右移">&#8594;</button>
+              <div class="card-scroll-btns">
+                <button class="card-scroll-btn left" aria-label="左移">&#8592;</button>
+                <button class="card-scroll-btn right" aria-label="右移">&#8594;</button>
+              </div>
             </div>
           </div>`
         },
@@ -730,8 +749,8 @@
       const wrappers = document.querySelectorAll('.card-scroll-wrapper');
       wrappers.forEach(function(wrapper) {
         const row = wrapper.querySelector('.cards-scroll-row');
-        const btnL = wrapper.querySelector('.card-scroll-btn.left');
-        const btnR = wrapper.querySelector('.card-scroll-btn.right');
+        const btnL = wrapper.querySelector('.card-scroll-btns .card-scroll-btn.left');
+        const btnR = wrapper.querySelector('.card-scroll-btns .card-scroll-btn.right');
         function getScrollAmount() {
           const card = row.querySelector('.card');
           if(card) return Math.floor(card.offsetWidth + parseInt(getComputedStyle(row).gap||"32"));
