@@ -808,5 +808,106 @@
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
     });
   </script>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>AEOLIAN_SAND网站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 你的原有 CSS 都可保留，这里略 -->
+  <style>
+    /* ... 你的原有样式 ... */
+    html, body {
+      margin: 0; padding: 0; width: 100vw; height: 100vh;
+      min-height: 100vh;
+      background: #000;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","黑体","SimHei",Arial,sans-serif;
+      overflow: hidden;
+    }
+    /* 省略原有样式，直接加新指针相关样式 */
+    #custom-cursor {
+      pointer-events: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 22px; height: 22px;
+      margin-left: -11px; margin-top: -11px;
+      border-radius: 50%;
+      background: #4d7fff;
+      box-shadow: 0 0 10px #4d7fff77;
+      z-index: 9999;
+      transition: transform 0.12s cubic-bezier(.7,0,.3,1), opacity 0.22s;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    html.hide-cursor, body.hide-cursor {
+      cursor: none !important;
+    }
+    /* 你其它样式继续... */
+  </style>
+</head>
+<body>
+  <!-- 星空canvas、header、菜单、内容页、footer等都保持你的原结构 -->
+
+  <canvas id="star-canvas"></canvas>
+  <header>
+    <div class="logo">
+      <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">AEOLIAN_SAND</a>
+    </div>
+    <nav class="main-menu">
+      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">作品</a>
+      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">新闻</a>
+      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO-CLUB</a>
+      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">关于</a>
+    </nav>
+  </header>
+  <div class="page-indicator" id="page-indicator"></div>
+  <div class="pages-container" id="pages-container"></div>
+  <div class="footer-outer" id="footer-outer">
+    <footer>
+      <div class="footer-links">
+        <div class="footer-title">相关网站</div>
+        <ul>
+          <li>
+            <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+          </li>
+          <li>
+            <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+          </li>
+        </ul>
+        <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+      </div>
+      <p class="copyright-note">Copyright Since 2025 ©AEOLIAN_SAND. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- 你的所有原有 JS 脚本，例如页面切换、星空动画等都保持不变 -->
+  <script>
+    // ... 你的原有 JS 逻辑 ...
+    // 星空、页面切换等
+  </script>
+
+  <!-- 蓝色圆点自定义指针 BEGIN -->
+  <div id="custom-cursor"></div>
+  <script>
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.opacity = '1';
+      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      document.documentElement.classList.add('hide-cursor');
+      document.body.classList.add('hide-cursor');
+    });
+    document.addEventListener('mouseleave', () => {
+      cursor.style.opacity = '0';
+    });
+    document.addEventListener('touchstart', () => {
+      cursor.style.opacity = '0';
+      document.documentElement.classList.remove('hide-cursor');
+      document.body.classList.remove('hide-cursor');
+    });
+  </script>
+  <!-- 蓝色圆点自定义指针 END -->
+
+</body>
+</html>
 </body>
 </html>
