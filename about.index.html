@@ -35,6 +35,7 @@
       align-items: center;
       user-select: none;
       transition: top 0.4s cubic-bezier(.7,0,.3,1);
+      padding: 0;
     }
     .logo {
       font-weight: 800;
@@ -48,11 +49,14 @@
       align-items: center;
       position: relative;
       z-index: 2;
+      height: 100%;
     }
     .logo a {
       color: #fff !important;
       text-decoration: none;
       padding: 0.2em 0;
+      display: block;
+      line-height: 1;
     }
     .main-menu {
       display: flex;
@@ -64,7 +68,7 @@
       background: none;
       box-shadow: none;
       width: auto;
-      height: auto;
+      height: 100%;
       opacity: 1 !important;
       pointer-events: auto !important;
       visibility: visible !important;
@@ -90,6 +94,8 @@
       text-shadow: 0 2px 8px rgba(0,0,0,0.08);
       font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
       word-break: break-all;
+      display: block;
+      line-height: 1.7;
     }
     .menu-link:hover,
     .menu-link:focus {
@@ -119,7 +125,6 @@
     .menu-link:focus::after {
       transform: scaleX(1);
     }
-    /* about内容布局 */
     .about-container {
       margin-top: 56px;
       min-height: calc(100vh - 56px);
@@ -162,28 +167,41 @@
       user-select: text;
     }
     @media (max-width:700px){
-      header { height: 44px; }
-      .logo { font-size: 0.85em; height:44px; padding-left:8px;}
+      header {
+        height: 44px;
+        padding: 0;
+        flex-direction: row;
+        align-items: center;
+      }
+      .logo {
+        font-size: 0.95em;
+        height: 100%;
+        padding-left: 10px;
+        padding-right: 0;
+        margin-right: 0;
+        min-width: 0;
+      }
+      .logo a {
+        font-size: 1.1em;
+        padding: 0;
+      }
       .main-menu {
+        margin-left: 12px;
+        gap: 0.2em;
+        padding: 0;
+        height: 44px;
+        align-items: center;
+        justify-content: flex-start;
         position: static;
         left: auto;
         top: auto;
         transform: none;
-        display: flex;
-        gap: 0.3em;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        background: none;
-        box-shadow: none;
         width: auto;
-        height: 44px;
-        padding: 0 8px;
-        margin-left: 0.3em;
       }
       .menu-link {
-        font-size: 0.95em;
-        padding: 2px 6px;
+        font-size: 0.98em;
+        padding: 1px 7px;
+        line-height: 1.7;
       }
       .about-title { font-size:1.2em; margin-top:30px;margin-left:10px;}
       .about-content { font-size:1em; padding:16px 10px 12px 14px; margin-left:10px; width:90vw;max-width:98vw;}
@@ -423,7 +441,6 @@
     window.addEventListener('DOMContentLoaded', function() {
       const canvas = document.getElementById('star-canvas');
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
-      // 让星星一加载就散开
       starfield.setMode('spread');
     });
   </script>
