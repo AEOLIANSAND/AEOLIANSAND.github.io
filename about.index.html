@@ -1,0 +1,415 @@
+<html lang="zh-CN"><head>
+  <meta charset="UTF-8">
+  <title>关于 - AEOLIAN_SAND</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      opacity: 1;
+      transition: opacity 0.9s cubic-bezier(.7,0,.3,1);
+      margin: 0; padding: 0; width: 100vw; height: 100vh;
+      background: #000;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","黑体","SimHei",Arial,sans-serif;
+      overflow: hidden;
+    }
+    body.fadein-init { opacity: 0; }
+    #star-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+    header {
+      width: 100vw;
+      height: 56px;
+      position: fixed;
+      top: 0; left: 0;
+      z-index: 100;
+      background: rgba(30,32,43,0.40);
+      backdrop-filter: blur(18px) saturate(180%);
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09);
+      border-bottom: 1.5px solid rgba(255,255,255,0.13);
+      display: flex;
+      align-items: center;
+      user-select: none;
+      transition: top 0.4s cubic-bezier(.7,0,.3,1);
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1em;
+      letter-spacing: 1.5px;
+      padding-left: 32px;
+      color: #fff !important;
+      font-family: "Microsoft YaHei Light","微软雅黑 Light","Segoe UI",Arial,sans-serif;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .logo a {
+      color: #fff !important;
+      text-decoration: none;
+      padding: 0.2em 0;
+    }
+    .main-menu {
+      position: absolute;
+      left: 55%;
+      top: 50%;
+      transform: translateY(-50%) translateX(-10%);
+      display: flex;
+      gap: 2vw;
+      z-index: 2;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      box-shadow: none;
+      width: auto;
+      height: auto;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      visibility: visible !important;
+      border-radius: 0;
+      padding: 0;
+      transition: none;
+    }
+    .menu-link {
+      position: relative;
+      font-size: 1em;
+      font-weight: 500;
+      color: #fff !important;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 7px;
+      transition: color 0.25s;
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
+      word-break: break-all;
+    }
+    .menu-link:hover,
+    .menu-link:focus {
+      color: #4d7fff !important;
+    }
+    .menu-link.active {
+      color: #4d7fff !important;
+    }
+    .menu-link::after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 20%;
+      right: 20%;
+      bottom: 0;
+      height: 2.5px;
+      background: #4d7fff;
+      border-radius: 2px;
+      opacity: 1;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.28s cubic-bezier(.7,0,.3,1);
+      pointer-events: none;
+    }
+    .menu-link.active::after,
+    .menu-link:hover::after,
+    .menu-link:focus::after {
+      transform: scaleX(1);
+    }
+    /* about内容布局 */
+    .about-container {
+      margin-top: 56px;
+      min-height: calc(100vh - 56px);
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      position: relative;
+      z-index: 2;
+    }
+    .about-title {
+      font-size: 2.1em;
+      font-weight: 600; /* 修改字体粗细为600 */
+      color: #fff;
+      letter-spacing: 2px;
+      margin-top: 48px;
+      margin-left: 44px;
+      text-shadow: 0 2px 18px rgba(0,0,0,0.22);
+      margin-bottom: 22px;
+      user-select: none;
+    }
+    .about-content {
+      background: rgba(24,28,48,0.72);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.16);
+      color: #d9e0fa;
+      font-size: 1.13em;
+      font-weight: 400;
+      line-height: 2.2;
+      text-shadow: 0 1px 9px rgba(0,0,0,0.32);
+      width: 80vw;
+      max-width: 540px;
+      margin-left: 44px;
+      margin-bottom: 0;
+      padding: 32px 36px 28px 36px;
+      word-break: break-all;
+      box-sizing: border-box;
+      text-indent: 2em; /* 首行空两格 */
+      user-select: text;
+    }
+    @media (max-width:700px){
+      header { height: 44px; }
+      .logo { font-size: 0.85em; height:44px; padding-left:6px;}
+      .main-menu { left: 60%; gap: 1vw; }
+      .menu-link { font-size:0.92em; padding: 1px 5px;}
+      .about-title { font-size:1.2em; margin-top:30px;margin-left:10px;}
+      .about-content { font-size:1em; padding:16px 10px 12px 14px; margin-left:10px; width:90vw;max-width:98vw;}
+    }
+    /* 底栏样式同主页 */
+    #footer-outer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
+      z-index: 101;
+      transform: translateY(0);
+      opacity: 1;
+      transition: transform 0.5s cubic-bezier(.7,0,.3,1);
+      will-change: transform;
+      pointer-events: auto;
+    }
+    footer {
+      background: rgba(30,32,43,0.20);
+      backdrop-filter: blur(10px) saturate(150%);
+      color: #d0d0e8;
+      text-align: center;
+      padding: 2em 0 1.2em 0;
+      font-size: 1em;
+      letter-spacing: 1px;
+      border-top: 1px solid #222c35;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .footer-links {
+      font-size: 0.99em;
+      font-family: "Microsoft YaHei","微软雅黑","Segoe UI",Arial,sans-serif;
+      color: #b5bad2;
+      text-align: center;
+      margin-bottom: 1.2em;
+      letter-spacing: 0.3px;
+    }
+    .footer-links ul {
+      padding-left: 0;
+      list-style: none;
+      margin: 0.4em 0;
+    }
+    .footer-links li {
+      display: inline-block;
+      margin: 0 0.9em 0 0;
+      font-size: 0.99em;
+    }
+    .footer-links a {
+      color: #5c7bff;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .2s, border-bottom .2s;
+      font-family: inherit;
+    }
+    .footer-links a:hover {
+      color: #fff9cc;
+      border-bottom: 1px solid #5c7bff;
+    }
+    .footer-title {
+      font-weight: bold;
+      margin-bottom: 0.2em;
+      font-size: 0.99em;
+      color: #fff;
+      font-family: inherit;
+    }
+    .footer-note {
+      color: #b5bad2;
+      font-size: 0.85em;
+      margin-top: 0.6em;
+      font-family: inherit;
+    }
+    .copyright-note {
+      font-size: 0.92em;
+      color: #b5bad2;
+      margin-top: 0.8em;
+      font-family: inherit;
+      letter-spacing: 0.2px;
+    }
+  </style>
+</head>
+<body class="fadein-init">
+  <canvas id="star-canvas"></canvas>
+  <header>
+    <div class="logo">
+      <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">AEOLIAN_SAND</a>
+    </div>
+    <nav class="main-menu" id="main-menu">
+      <a href="index.html" class="menu-link">作品</a>
+      <a href="index.html" class="menu-link">动态</a>
+      <a href="index.html" class="menu-link">AEO-CLUB</a>
+      <a href="about.html" class="menu-link active">关于</a>
+    </nav>
+  </header>
+  <div class="about-container">
+    <div class="about-title">关于AEOLIAN_SAND</div>
+    <div class="about-content">
+      这里是AEOLIAN_SAND坤哥的创意设计网站。在这里你可以看到坤哥的生活动态，经验分享，设计作品与心得体会，并从这里得到美学感受，自我认识，获得共鸣。这就是AEOLIAN_SAND网站存在的意义。
+    </div>
+  </div>
+  <div class="footer-outer" id="footer-outer">
+    <footer>
+      <div class="footer-links">
+        <div class="footer-title">相关网站</div>
+        <ul>
+          <li>
+            <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+          </li>
+          <li>
+            <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+          </li>
+        </ul>
+        <div class="footer-note">
+          注：无法访问 GitHub 网站属正常现象，请在网址中“github”前手动加入"kk"字样。
+        </div>
+      </div>
+      <p class="copyright-note">Copyright Since 2025 ©AEOLIAN_SAND. All rights reserved.</p>
+    </footer>
+  </div>
+  <script>
+    // 页面淡入效果
+    window.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.remove('fadein-init');
+    });
+    // 星空背景（将主页StarField类完整JS粘贴到这里即可）
+    let starfield = null;
+    class StarField {
+      constructor(canvas, numStars) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.mode = "center";
+        this.targetMode = "center";
+        this.animationProgress = 0;
+        this.numStars = numStars || 180;
+        this.resize();
+        this.createStars();
+        this.createSpreadTargets();
+        this.animate();
+        window.addEventListener('resize', () => {
+          this.resize();
+          this.createSpreadTargets();
+        });
+      }
+      setMode(mode) {
+        if(mode === this.targetMode && (mode!=="spread" || this.animationProgress===1)) return;
+        this.targetMode = mode;
+        this.startAnimation = performance.now();
+        this.startProgress = this.animationProgress;
+        this.animating = true;
+        if (mode === "spread") {
+          this.createSpreadTargets();
+        }
+        this.animateTransition();
+      }
+      createStars() {
+        this.stars = [];
+        for(let i=0; i<this.numStars; i++){
+          let angle = Math.random()*2*Math.PI;
+          let baseRatio = Math.sqrt((i + 0.5) / this.numStars);
+          let extra = (Math.random() - 0.5) * 0.22;
+          let r = (baseRatio + extra) * this.radius * (0.97 + 0.04 * Math.random());
+          let x = this.centerX + r * Math.cos(angle);
+          let y = this.centerY + r * Math.sin(angle);
+          this.stars.push({
+            cx: x, cy: y,
+            sx: x, sy: y,
+            r: Math.random()*1.7 + 0.5,
+            speed: Math.random()*0.07 + 0.03,
+            twinkle: Math.random()*Math.PI*2,
+            opacity: Math.random()*0.8 + 0.2
+          });
+        }
+      }
+      createSpreadTargets() {
+        for(let s of this.stars){
+          s.sx = Math.random() * this.w;
+          s.sy = Math.random() * this.h;
+        }
+      }
+      animateTransition(){
+        if(!this.animating) return;
+        let now = performance.now();
+        let t = Math.min(1,(now-this.startAnimation)/680);
+        if(this.targetMode==="spread"){
+          this.animationProgress = this.startProgress + (1-this.startProgress)*t;
+        }else{
+          this.animationProgress = this.startProgress - this.startProgress*t;
+        }
+        if(t<1){
+          requestAnimationFrame(()=>this.animateTransition());
+        }else{
+          this.animationProgress = (this.targetMode==="spread"?1:0);
+          this.animating = false;
+        }
+      }
+      resize() {
+        this.w = this.canvas.width = window.innerWidth;
+        this.h = this.canvas.height = window.innerHeight;
+        this.centerX = this.w/2;
+        this.centerY = this.h/2;
+        this.radius = Math.min(this.w,this.h) * 0.36;
+      }
+      draw() {
+        this.ctx.clearRect(0, 0, this.w, this.h);
+        for(let i=0;i<this.stars.length;i++){
+          let s = this.stars[i];
+          let t = this.animationProgress;
+          let x = s.cx*(1-t) + s.sx*t;
+          let y = s.cy*(1-t) + s.sy*t;
+          let tw = 0.6 + 0.4*Math.sin(s.twinkle + Date.now()*0.0014 + i*0.6);
+          let o = s.opacity * tw;
+          this.ctx.beginPath();
+          this.ctx.arc(x, y, s.r, 0, Math.PI*2, false);
+          this.ctx.fillStyle = "rgba(255,255,255," + o + ")";
+          this.ctx.shadowColor = "#fff";
+          this.ctx.shadowBlur = 8 * o;
+          this.ctx.fill();
+          this.ctx.shadowBlur = 0;
+          s.cx += Math.cos(s.twinkle)*s.speed*0.12;
+          s.cy += Math.sin(s.twinkle)*s.speed*0.10;
+          s.sx += Math.cos(s.twinkle)*s.speed*0.12;
+          s.sy += Math.sin(s.twinkle)*s.speed*0.10;
+          if(s.cx-this.centerX>this.radius || s.cx-this.centerX<-this.radius ||
+             s.cy-this.centerY>this.radius || s.cy-this.centerY<-this.radius){
+            let angle=Math.random()*2*Math.PI;
+            let r=Math.random()*this.radius*0.95;
+            s.cx = this.centerX+r*Math.cos(angle);
+            s.cy = this.centerY+r*Math.sin(angle);
+          }
+          if(s.sx<0) s.sx=this.w;
+          if(s.sx>this.w) s.sx=0;
+          if(s.sy<0) s.sy=this.h;
+          if(s.sy>this.h) s.sy=0;
+        }
+      }
+      animate = () => {
+        this.draw();
+        requestAnimationFrame(this.animate);
+      }
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('star-canvas');
+      starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
+    });
+  </script>
+
+
+    </body></html>
