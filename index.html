@@ -39,6 +39,7 @@
       display: flex;
       align-items: center;
       user-select: none;
+      transition: top 0.4s cubic-bezier(.7,0,.3,1);
     }
     .logo {
       font-weight: 800;
@@ -122,20 +123,17 @@
     .menu-link:focus::after {
       transform: scaleX(1);
     }
-    @media (max-width: 900px) {
-      header { height: 44px; }
-      .logo { font-size: 0.85em; height:44px; padding-left:6px;}
-      .main-menu { left: 60%; gap: 1vw; }
-      .menu-link { font-size:0.92em; padding: 1px 5px;}
-    }
+    /* 手机端菜单栏下移一半 */
     @media (max-width:700px){
+      header {
+        top: 50vh !important;
+        height: 44px;
+      }
       .main-menu {
-        position: fixed;
-        top: 44px;
+        top: 50%;
         left: 0;
         right: 0;
         width: 100vw;
-        height: auto;
         background: rgba(24,28,48,0.72);
         border-radius: 0 0 18px 18px;
         box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.16);
@@ -148,8 +146,10 @@
         visibility: visible !important;
         z-index: 222;
         padding: 0 12vw;
+        transform: translateY(-50%);
         transition: none;
       }
+      .logo { font-size: 0.85em; height:44px; padding-left:6px;}
       .menu-link {
         font-size: 1em;
         padding: 2px 8px;
@@ -161,7 +161,7 @@
         color: #fff !important;
       }
     }
-    /* 页数指示器竖直排列在右侧，当前页稍大无光晕 */
+    /* 页数指示器竖直排列在右侧，当前页略大且有微小白色光晕 */
     .page-indicator {
       position: fixed;
       right: 24px;
@@ -196,7 +196,7 @@
       height: 16px;
       opacity: 1;
       background: #fff;
-      box-shadow: none;
+      box-shadow: 0 0 8px 2.5px #fff8; /* 微小柔和白光晕 */
       filter: none;
       border: none;
     }
@@ -206,7 +206,7 @@
         gap: 14px;
       }
     }
-    /* 其余内容保持不变 */
+    /* 页面容器 */
     .pages-container {
       width: 100vw;
       height: 100vh;
@@ -259,6 +259,16 @@
       align-items: center;
       overflow: hidden;
       z-index: 2;
+    }
+    /* 第二页卡片下移一半 */
+    .page.move-down {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+    .page.move-down .page-content-outer {
+      margin-top: 50vh;
     }
     .page-content-outer {
       width: 100vw;
@@ -599,7 +609,8 @@
               </div>
               <button class="card-scroll-btn right" aria-label="右移">&#8594;</button>
             </div>
-          </div>`
+          </div>`,
+          moveDown: true
         },
         {
           html: `<div class="page-content-outer"></div>`
@@ -615,6 +626,7 @@
     pages.forEach((page, idx) => {
       const div = document.createElement('div');
       div.className = 'page ' + (page.fullscreen ? 'fullscreen' : 'autosize');
+      if (idx === 1) div.classList.add('move-down');
       if (idx === 0) div.classList.add('page-in');
       else div.classList.add('page-out-down', 'page-hide');
       div.dataset.idx = idx;
