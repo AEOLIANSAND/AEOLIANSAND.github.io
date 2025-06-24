@@ -168,7 +168,6 @@
         color: #fff !important;
       }
     }
-    /* 页数指示器竖直排列在右侧，当前页带白色光晕 */
     .page-indicator {
       position: fixed;
       right: 24px;
@@ -213,7 +212,6 @@
         gap: 14px;
       }
     }
-    /* 第二页卡片下移 */
     .page.move-down .page-content-outer {
       margin-top: 8vh;
     }
@@ -222,7 +220,6 @@
         margin-top: 4vh;
       }
     }
-    /* 卡片按钮下方排列，间距适中 */
     .card-scroll-btns {
       display: flex;
       justify-content: center;
@@ -332,7 +329,7 @@
       pointer-events: auto;
       box-sizing: border-box;
       padding-top: 56px;
-      padding-bottom: 0; /* 去掉底部多余padding */
+      padding-bottom: 0;
       background: transparent;
       border: none;
     }
@@ -391,7 +388,6 @@
       pointer-events: auto;
       background: transparent;
       border: none;
-      /* 隐藏滚动条 */
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
@@ -610,6 +606,13 @@
           <div class="card-content">该网站还在建设中，敬请期待！</div>
         </div>`,
         `<div class="card">
+          <div class="card-title">新进展。</div>
+          <div class="card-content">
+            AEOLIAN_SAND网站的“关于”网页已基本建成。<br>
+            <a class="card-detail-link" style="color:#4d7fff;" href="https://aeoliansand.github.io/about.index.html" target="_blank" rel="noopener">查看详情&gt;</a>
+          </div>
+        </div>`,
+        `<div class="card">
           <div class="card-title">见证历史。</div>
           <div class="card-content">
             2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
@@ -655,7 +658,7 @@
     pages.forEach((page, idx) => {
       const div = document.createElement('div');
       div.className = 'page ' + (page.fullscreen ? 'fullscreen' : 'autosize');
-      if (idx === 1) div.classList.add('move-down'); // 第二页下移
+      if (idx === 1) div.classList.add('move-down');
       if (idx === 0) div.classList.add('page-in');
       else div.classList.add('page-out-down', 'page-hide');
       div.dataset.idx = idx;
