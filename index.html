@@ -466,6 +466,15 @@
       .card { flex: 0 0 85vw; height: auto; min-width: 210px; padding: 20px 4vw 18px 4vw;}
     }
   </style>
+  <!-- 手机端访问提示，插入在head里，优先于页面内容 -->
+  <script>
+    if (/Android|webOS|iPhone|iPod|BlackBerry|iPad|Windows Phone|Mobile/i.test(navigator.userAgent)) {
+      document.write(
+        '<div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:99999;background:#111;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3em;text-align:center;">请在电脑端打开该网页以正常显示该页面。</div>'
+      );
+      document.body.style.display = "none";
+    }
+  </script>
 </head>
 <body class="fadein-init">
   <canvas id="star-canvas"></canvas>
