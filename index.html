@@ -66,7 +66,6 @@
       display: flex;
       gap: 2vw;
       z-index: 2;
-      transition: none;
       flex-direction: row;
       align-items: center;
       justify-content: center;
@@ -79,6 +78,7 @@
       visibility: visible !important;
       border-radius: 0;
       padding: 0;
+      transition: none;
     }
     .menu-link {
       position: relative;
@@ -122,32 +122,6 @@
     .menu-link:focus::after {
       transform: scaleX(1);
     }
-    .menu-toggle {
-      display: none;
-      position: absolute;
-      right: 18px;
-      top: 10px;
-      width: 38px;
-      height: 38px;
-      background: rgba(30,32,43,0.80);
-      border: 2px solid transparent;
-      box-shadow: none;
-      border-radius: 8px;
-      font-size: 2em;
-      color: #fff;
-      z-index: 20;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    .menu-toggle:active,
-    .menu-toggle:hover {
-      background: #4d7fff;
-      color: #fff;
-      border: 2px solid transparent;
-      box-shadow: none;
-    }
     @media (max-width: 900px) {
       header { height: 44px; }
       .logo { font-size: 0.85em; height:44px; padding-left:6px;}
@@ -169,17 +143,12 @@
         align-items: center;
         justify-content: center;
         gap: 2vw;
-        opacity: 0;
-        pointer-events: none;
-        visibility: hidden;
-        transition: opacity 0.32s cubic-bezier(.7,0,.3,1), visibility 0.32s cubic-bezier(.7,0,.3,1);
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        visibility: visible !important;
         z-index: 222;
         padding: 0 12vw;
-      }
-      .main-menu.menu-open {
-        opacity: 1;
-        pointer-events: auto;
-        visibility: visible;
+        transition: none;
       }
       .menu-link {
         font-size: 1em;
@@ -191,12 +160,8 @@
         border-bottom: none;
         color: #fff !important;
       }
-      .menu-toggle {
-        display: flex;
-      }
     }
-
-    /* 页数指示器竖直排列在右侧，当前页大且白色柔和发光 */
+    /* 页数指示器竖直排列在右侧，当前页稍大无光晕 */
     .page-indicator {
       position: fixed;
       right: 24px;
@@ -218,22 +183,22 @@
       border-radius: 50%;
       background: #fff;
       opacity: 0.45;
-      transition: all 0.4s cubic-bezier(.7,0,.3,1);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s cubic-bezier(.7,0,.3,1);
+      box-shadow: none;
       pointer-events: auto;
       cursor: pointer;
       margin: 2px 0;
-      filter: blur(0);
+      filter: none;
       border: none;
     }
     .indicator-dot.active {
-      width: 22px;
-      height: 22px;
+      width: 16px;
+      height: 16px;
       opacity: 1;
-      box-shadow: 0 0 24px 8px #fff8, 0 0 0 6px #fff4;
-      filter: blur(0.5px);
       background: #fff;
-      border: 2.5px solid #fff;
+      box-shadow: none;
+      filter: none;
+      border: none;
     }
     @media (max-width:700px){
       .page-indicator {
@@ -241,7 +206,7 @@
         gap: 14px;
       }
     }
-    /* 以下内容基本不变 */
+    /* 其余内容保持不变 */
     .pages-container {
       width: 100vw;
       height: 100vh;
@@ -551,7 +516,6 @@
     <div class="logo">
       <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">AEOLIAN_SAND</a>
     </div>
-    <button class="menu-toggle" id="menu-toggle" aria-label="展开菜单">=</button>
     <nav class="main-menu" id="main-menu">
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">作品</a>
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">动态</a>
@@ -579,44 +543,6 @@
     </footer>
   </div>
   <script>
-    // 汉堡菜单控制
-    (function(){
-      var toggle = document.getElementById('menu-toggle');
-      var menu = document.getElementById('main-menu');
-      var isOpen = false;
-      function closeMenu() {
-        menu.classList.remove('menu-open');
-        isOpen = false;
-      }
-      function openMenu() {
-        menu.classList.add('menu-open');
-        isOpen = true;
-      }
-      function toggleMenu(e){
-        e.stopPropagation();
-        isOpen ? closeMenu() : openMenu();
-      }
-      toggle.addEventListener('click', toggleMenu);
-      // 点击菜单链接后折叠菜单，仅在手机端生效
-      menu.addEventListener('click', function(e){
-        if(window.innerWidth <= 700 && e.target.classList.contains('menu-link')){
-          closeMenu();
-        }
-      });
-      // 点击其他地方自动关闭
-      document.addEventListener('click', function(e){
-        if(window.innerWidth <= 700 && isOpen && !menu.contains(e.target) && e.target!==toggle){
-          closeMenu();
-        }
-      });
-      // 屏幕尺寸变化时自动关闭菜单
-      window.addEventListener('resize', function(){
-        if(window.innerWidth > 700){
-          menu.classList.remove('menu-open');
-        }
-      });
-    })();
-
     // 页面淡入效果
     window.addEventListener('DOMContentLoaded', function() {
       document.body.classList.remove('fadein-init');
