@@ -886,27 +886,6 @@
     // 星空、页面切换等
   </script>
 
-  <!-- 蓝色圆点自定义指针 BEGIN -->
-  <div id="custom-cursor"></div>
-  <script>
-    const cursor = document.getElementById('custom-cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.opacity = '1';
-      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-      document.documentElement.classList.add('hide-cursor');
-      document.body.classList.add('hide-cursor');
-    });
-    document.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0';
-    });
-    document.addEventListener('touchstart', () => {
-      cursor.style.opacity = '0';
-      document.documentElement.classList.remove('hide-cursor');
-      document.body.classList.remove('hide-cursor');
-    });
-  </script>
-  <!-- 蓝色圆点自定义指针 END -->
-
 </body>
 </html>
 </body>
