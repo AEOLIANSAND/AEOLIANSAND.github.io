@@ -5,6 +5,13 @@
   <title>AEOLIAN_SAND网站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    body {
+      opacity: 1;
+      transition: opacity 0.9s cubic-bezier(.7,0,.3,1);
+    }
+    body.fadein-init {
+      opacity: 0;
+    }
     html, body {
       margin: 0; padding: 0; width: 100vw; height: 100vh;
       min-height: 100vh;
@@ -140,10 +147,7 @@
     @media (max-width: 900px) {
       header { height: 44px; }
       .logo { font-size: 0.85em; height:44px; padding-left:6px;}
-      .main-menu {
-        left: 60%;
-        gap: 1vw;
-      }
+      .main-menu { left: 60%; gap: 1vw; }
       .menu-link { font-size:0.92em; padding: 1px 5px;}
     }
     @media (max-width:700px){
@@ -273,11 +277,11 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       pointer-events: auto;
-      scrollbar-width: none;           /* Firefox */
-      -ms-overflow-style: none;        /* IE 10+ */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
     .cards-scroll-row::-webkit-scrollbar {
-      display: none;                   /* Chrome/Safari/Opera */
+      display: none;
     }
     .card-scroll-btn {
       position: relative;
@@ -463,7 +467,7 @@
     }
   </style>
 </head>
-<body>
+<body class="fadein-init">
   <canvas id="star-canvas"></canvas>
   <header>
     <div class="logo">
@@ -496,6 +500,11 @@
     </footer>
   </div>
   <script>
+    // 页面淡入效果
+    window.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.remove('fadein-init');
+    });
+
     function getPages() {
       const cards2 = [
         `<div class="card">
@@ -512,7 +521,6 @@
         </div>`
       ];
       return [
-        // 页1
         {
           html: `<div class="page-content-outer">
             <div class="splash-text">
@@ -522,7 +530,6 @@
           </div>`,
           fullscreen: true
         },
-        // 页2（卡片带左右滑动按钮）
         {
           html: `<div class="page-content-outer">
             <div class="card-scroll-wrapper">
@@ -534,7 +541,6 @@
             </div>
           </div>`
         },
-        // 页3（空白页，footer全局管理）
         {
           html: `<div class="page-content-outer"></div>`
         }
@@ -575,7 +581,7 @@
     let curPage = 0;
     let animating = false;
     const footerElem = document.getElementById('footer-outer');
-    let footerShouldShow = false; // 是否footer已触发显示
+    let footerShouldShow = false;
 
     function showFooter() {
       footerElem.classList.add('footer-visible');
@@ -603,10 +609,10 @@
         pageElems[curPage].classList.add('page-hide');
         curPage = target;
         animating = false;
-        if(curPage !== pages.length-1) hideFooter(); // 离开最后一页隐藏footer
+        if(curPage !== pages.length-1) hideFooter();
       },560);
     }
-    // ====== 滚轮/滑动切换和footer逻辑 ======
+
     container.addEventListener('wheel', function(e){
       if(animating) return;
       if(curPage === pages.length-1 && e.deltaY > 30 && !footerShouldShow){
@@ -620,7 +626,6 @@
         gotoPage(curPage-1);
       }
     }, {passive:false});
-    // 手势滑动
     let startY = null;
     container.addEventListener('touchstart', function(e){
       if(e.touches.length===1) startY = e.touches[0].clientY;
@@ -643,15 +648,12 @@
     },{passive:true});
     renderDots(0);
 
-    // ====== 卡片左右滑动按钮功能 ======
     window.addEventListener('DOMContentLoaded', function() {
       const wrappers = document.querySelectorAll('.card-scroll-wrapper');
       wrappers.forEach(function(wrapper) {
         const row = wrapper.querySelector('.cards-scroll-row');
         const btnL = wrapper.querySelector('.card-scroll-btn.left');
         const btnR = wrapper.querySelector('.card-scroll-btn.right');
-        const cards = row.querySelectorAll('.card');
-        // 取第一个卡片宽度做滚动单元（响应式）
         function getScrollAmount() {
           const card = row.querySelector('.card');
           if(card) return Math.floor(card.offsetWidth + parseInt(getComputedStyle(row).gap||"32"));
@@ -668,14 +670,11 @@
           row.scrollBy({left: getScrollAmount(), behavior: "smooth"});
         });
         row.addEventListener('scroll', updateBtnStatus);
-        // 初始化
         updateBtnStatus();
-        // 保证窗口变化后按钮状态正确
         window.addEventListener('resize', updateBtnStatus);
       });
     });
 
-    // ====== 星空动画 ======
     let starfield = null;
     class StarField {
       constructor(canvas, numStars) {
@@ -769,12 +768,10 @@
           this.ctx.shadowBlur = 8 * o;
           this.ctx.fill();
           this.ctx.shadowBlur = 0;
-          // 星星持续缓慢移动
           s.cx += Math.cos(s.twinkle)*s.speed*0.12;
           s.cy += Math.sin(s.twinkle)*s.speed*0.10;
           s.sx += Math.cos(s.twinkle)*s.speed*0.12;
           s.sy += Math.sin(s.twinkle)*s.speed*0.10;
-          // 边界处理
           if(s.cx-this.centerX>this.radius || s.cx-this.centerX<-this.radius ||
              s.cy-this.centerY>this.radius || s.cy-this.centerY<-this.radius){
             let angle=Math.random()*2*Math.PI;
