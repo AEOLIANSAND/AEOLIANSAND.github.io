@@ -77,7 +77,7 @@
       padding: 0;
       transition: none;
       margin-left: auto;
-      margin-right: 10vw; /* 控制菜单整体“居中偏右”，可调数值 */
+      margin-right: 10vw;
     }
     .menu-link {
       position: relative;
@@ -170,16 +170,17 @@
     }
     @media (max-width:700px){
       header {
-        height: 44px;
-        flex-direction: row;
-        align-items: center;
+        height: auto;
+        min-height: 44px;
+        flex-direction: column;
+        align-items: flex-start;
         justify-content: flex-start;
         padding: 0;
       }
       .logo {
         font-size: 0.95em;
-        height: 100%;
-        padding-left: 10px;
+        width: 100%;
+        padding: 10px 0 0 10px;
         margin-right: 0;
       }
       .logo a {
@@ -188,15 +189,16 @@
       }
       .main-menu {
         display: flex;
+        flex-direction: row;
         gap: 0.2em;
-        height: 44px;
+        width: 100%;
+        justify-content: flex-end;
         align-items: center;
-        margin-left: auto;
-        margin-right: 6vw;
-        padding: 0;
+        margin: 0;
+        padding: 0 6vw 2px 0;
         position: static;
-        width: auto;
-        margin-top: 8px; /* 关键：下移菜单栏 */
+        height: 44px;
+        margin-top: 4px;
       }
       .menu-link {
         font-size: 0.98em;
