@@ -213,7 +213,15 @@
         gap: 14px;
       }
     }
-    /* 其余内容保持不变 */
+    /* 第二页卡片下移 */
+    .page.move-down .page-content-outer {
+      margin-top: 8vh;
+    }
+    @media (max-width:700px){
+      .page.move-down .page-content-outer {
+        margin-top: 4vh;
+      }
+    }
     .pages-container {
       width: 100vw;
       height: 100vh;
@@ -498,7 +506,7 @@
     }
     .footer-note {
       color: #b5bad2;
-      font-size: 0.97em;
+      font-size: 0.85em;
       margin-top: 0.6em;
       font-family: inherit;
     }
@@ -544,7 +552,9 @@
             <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
           </li>
         </ul>
-        <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+        <div class="footer-note">
+          注：无法访问 GitHub 网站属正常现象，请在网址中“github”前手动加入"kk"字样。
+        </div>
       </div>
       <p class="copyright-note">Copyright Since 2025 ©AEOLIAN_SAND. All rights reserved.</p>
     </footer>
@@ -622,6 +632,7 @@
     pages.forEach((page, idx) => {
       const div = document.createElement('div');
       div.className = 'page ' + (page.fullscreen ? 'fullscreen' : 'autosize');
+      if (idx === 1) div.classList.add('move-down'); // 第二页下移
       if (idx === 0) div.classList.add('page-in');
       else div.classList.add('page-out-down', 'page-hide');
       div.dataset.idx = idx;
