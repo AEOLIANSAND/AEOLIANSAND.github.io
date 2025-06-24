@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
   <meta charset="UTF-8">
   <title>AEOLIAN_SAND网站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -552,6 +550,13 @@
       .cards-scroll-row { gap: 16px; padding:0 4vw; max-width:92vw;}
       .card { min-width: 160px; min-height: 160px; }
     }
+    /* 新增：第二页无滚动条样式 */
+    .page-no-scroll {
+      overflow: hidden !important;
+    }
+    .page-no-scroll .cards-scroll-row {
+      overflow-x: hidden !important;
+    }
   </style>
 </head>
 <body class="fadein-init">
@@ -563,7 +568,7 @@
     <nav class="main-menu" id="main-menu">
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">作品</a>
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">动态</a>
-      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO-CLUB</a>
+      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO_CLUB</a>
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">关于</a>
     </nav>
   </header>
@@ -647,7 +652,8 @@
                 <button class="card-scroll-btn right" aria-label="右移">&#8594;</button>
               </div>
             </div>
-          </div>`
+          </div>`,
+          noScroll: true // 新增：标记第二页无滚动条
         },
         {
           html: `<div class="page-content-outer"></div>`
@@ -664,6 +670,7 @@
       const div = document.createElement('div');
       div.className = 'page ' + (page.fullscreen ? 'fullscreen' : 'autosize');
       if (idx === 1) div.classList.add('move-down'); // 第二页下移
+      if (page.noScroll) div.classList.add('page-no-scroll'); // 新增：应用无滚动条样式
       if (idx === 0) div.classList.add('page-in');
       else div.classList.add('page-out-down', 'page-hide');
       div.dataset.idx = idx;
@@ -885,24 +892,4 @@
              s.cy-this.centerY>this.radius || s.cy-this.centerY<-this.radius){
             let angle=Math.random()*2*Math.PI;
             let r=Math.random()*this.radius*0.95;
-            s.cx = this.centerX+r*Math.cos(angle);
-            s.cy = this.centerY+r*Math.sin(angle);
-          }
-          if(s.sx<0) s.sx=this.w;
-          if(s.sx>this.w) s.sx=0;
-          if(s.sy<0) s.sy=this.h;
-          if(s.sy>this.h) s.sy=0;
-        }
-      }
-      animate = () => {
-        this.draw();
-        requestAnimationFrame(this.animate);
-      }
-    }
-    window.addEventListener('DOMContentLoaded', function() {
-      const canvas = document.getElementById('star-canvas');
-      starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
-    });
-  </script>
-</body>
-</html>
+            s.cx =
