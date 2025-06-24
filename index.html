@@ -1,4 +1,6 @@
-<html lang="zh-CN"><head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
   <title>AEOLIAN_SAND网站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -220,6 +222,7 @@
         margin-top: 4vh;
       }
     }
+    /* 卡片按钮下方排列，间距适中 */
     .card-scroll-btns {
       display: flex;
       justify-content: center;
@@ -329,7 +332,7 @@
       pointer-events: auto;
       box-sizing: border-box;
       padding-top: 56px;
-      padding-bottom: 0;
+      padding-bottom: 0; /* 去掉底部多余padding */
       background: transparent;
       border: none;
     }
@@ -388,21 +391,12 @@
       pointer-events: auto;
       background: transparent;
       border: none;
-      scrollbar-width: none !important;        /* Firefox */
-      -ms-overflow-style: none !important;     /* IE/Edge */
-      scrollbar-color: transparent transparent !important;
+      /* 隐藏滚动条 */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
-    /* hide scrollbar for Chrome, Safari and Edge */
     .cards-scroll-row::-webkit-scrollbar {
-      display: none !important;
-      width: 0 !important;
-      height: 0 !important;
-      background: transparent !important;
-    }
-    .cards-scroll-row {
-      /* 防止极端情况出现滚动条占位 */
-      margin-bottom: -8px;
-      padding-bottom: 8px;
+      display: none;
     }
     .card {
       flex: 0 0 auto;
@@ -550,13 +544,6 @@
       .cards-scroll-row { gap: 16px; padding:0 4vw; max-width:92vw;}
       .card { min-width: 160px; min-height: 160px; }
     }
-    /* 新增：第二页无滚动条样式 */
-    .page-no-scroll {
-      overflow: hidden !important;
-    }
-    .page-no-scroll .cards-scroll-row {
-      overflow-x: hidden !important;
-    }
   </style>
 </head>
 <body class="fadein-init">
@@ -652,8 +639,7 @@
                 <button class="card-scroll-btn right" aria-label="右移">&#8594;</button>
               </div>
             </div>
-          </div>`,
-          noScroll: true // 新增：标记第二页无滚动条
+          </div>`
         },
         {
           html: `<div class="page-content-outer"></div>`
@@ -670,7 +656,6 @@
       const div = document.createElement('div');
       div.className = 'page ' + (page.fullscreen ? 'fullscreen' : 'autosize');
       if (idx === 1) div.classList.add('move-down'); // 第二页下移
-      if (page.noScroll) div.classList.add('page-no-scroll'); // 新增：应用无滚动条样式
       if (idx === 0) div.classList.add('page-in');
       else div.classList.add('page-out-down', 'page-hide');
       div.dataset.idx = idx;
@@ -911,5 +896,6 @@
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
     });
   </script>
-
-    </body></html>
+</body>
+</html>
+    
