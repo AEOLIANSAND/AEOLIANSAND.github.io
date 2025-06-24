@@ -568,7 +568,7 @@
     <nav class="main-menu" id="main-menu">
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">作品</a>
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">动态</a>
-      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO_CLUB</a>
+      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO-CLUB</a>
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">关于</a>
     </nav>
   </header>
@@ -892,4 +892,24 @@
              s.cy-this.centerY>this.radius || s.cy-this.centerY<-this.radius){
             let angle=Math.random()*2*Math.PI;
             let r=Math.random()*this.radius*0.95;
-            s.cx =
+            s.cx = this.centerX+r*Math.cos(angle);
+            s.cy = this.centerY+r*Math.sin(angle);
+          }
+          if(s.sx<0) s.sx=this.w;
+          if(s.sx>this.w) s.sx=0;
+          if(s.sy<0) s.sy=this.h;
+          if(s.sy>this.h) s.sy=0;
+        }
+      }
+      animate = () => {
+        this.draw();
+        requestAnimationFrame(this.animate);
+      }
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('star-canvas');
+      starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
+    });
+  </script>
+
+    </body></html>
