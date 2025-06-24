@@ -390,14 +390,21 @@
       pointer-events: auto;
       background: transparent;
       border: none;
-      scrollbar-width: none;        /* Firefox */
-      -ms-overflow-style: none;     /* IE/Edge */
+      scrollbar-width: none !important;        /* Firefox */
+      -ms-overflow-style: none !important;     /* IE/Edge */
+      scrollbar-color: transparent transparent !important;
     }
+    /* hide scrollbar for Chrome, Safari and Edge */
     .cards-scroll-row::-webkit-scrollbar {
-      display: none !important;                /* Chrome/Safari/Edge */
+      display: none !important;
       width: 0 !important;
       height: 0 !important;
       background: transparent !important;
+    }
+    .cards-scroll-row {
+      /* 防止极端情况出现滚动条占位 */
+      margin-bottom: -8px;
+      padding-bottom: 8px;
     }
     .card {
       flex: 0 0 auto;
