@@ -35,10 +35,10 @@
     }
     .logo {
       font-weight: 800;
-      font-size: 1.2em;
+      font-size: 1em;
       letter-spacing: 1.5px;
       padding-left: 32px;
-      color: #fff;
+      color: var(--logo-color, #fff);
       font-family: "Microsoft YaHei Light","微软雅黑 Light","Segoe UI",Arial,sans-serif;
       text-shadow: 0 2px 16px rgba(0,0,0,0.18);
       display: flex;
@@ -49,6 +49,33 @@
       text-decoration: none;
       padding: 0.2em 0;
     }
+    .main-menu {
+      display: flex;
+      gap: 2vw;
+      margin-left: 3vw;
+    }
+    .menu-link {
+      font-size: 1em;
+      font-weight: 500;
+      color: var(--menu-color, #f6f6f8);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 7px;
+      transition: color 0.25s, background 0.18s;
+      cursor: pointer;
+      background: none;
+      border: none;
+      outline: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
+    }
+    .menu-link:hover,
+    .menu-link:focus {
+      color: var(--menu-hover-color, #fff9cc);
+      background: rgba(77,127,255,0.11);
+    }
+
     .page-indicator {
       position: fixed;
       right: 3vw;
@@ -168,7 +195,7 @@
       user-select: none;
     }
     .splash-line {
-      font-family: 'Microsoft YaHei','黑体','SimHei','Heiti SC',Arial,sans-serif;
+      font-family: "Microsoft YaHei Light", "微软雅黑 Light", "Segoe UI", Arial, sans-serif;
       font-size: 2.8em;
       font-weight: 900;
       color: var(--splash-color,#fff);
@@ -179,73 +206,45 @@
       transition: color 0.4s;
     }
 
-    /* ===== 卡片滑块相关 ===== */
-    .card-slider-outer {
+    .page-content-outer {
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100vw;
-      position: relative;
-      margin-top: 7vh;
-      margin-bottom: 7vh;
+      flex-direction: column;
+      pointer-events: none;
     }
-    .card-slider-btn {
-      background: rgba(30,32,43,0.44);
-      border: none;
-      color: #fff;
-      font-size: 2em;
-      border-radius: 50%;
-      width: 40px; height: 40px;
-      cursor: pointer;
-      z-index: 10;
-      margin: 0 8px;
-      transition: background .2s;
-      user-select: none;
-      outline: none;
-    }
-    .card-slider-btn:active {
-      background: #4d7fff;
-      color: #fff9cc;
-    }
-    .cards-row {
-      width: 340px;
-      height: 340px;
-      min-width: 0;
-      min-height: 0;
+    .cards-scroll-row {
       display: flex;
       flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 0;
-      position: relative;
-      overflow: hidden;
-      z-index: 2;
-      background: none;
-      margin-bottom: 0;
-      padding: 0;
-      touch-action: pan-x;
+      gap: 32px;
+      width: max-content;
+      padding: 0 24vw;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      pointer-events: auto;
     }
-    .card.slide-card {
+    .card {
       flex: 0 0 320px;
       height: 320px;
-      max-width: 90vw;
-      min-width: 0;
       background: rgba(24,28,48,0.72);
       border-radius: 18px;
       box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.16);
-      border: none;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       box-sizing: border-box;
-      margin-bottom: 0;
       color: #d9e0fa;
-      transition: transform .4s cubic-bezier(.7,0,.3,1), opacity .3s;
-      overflow: hidden;
-      position: absolute;
-      left: 0; top: 0;
-      background-clip: padding-box;
       padding: 36px 32px 28px 32px;
+      margin-bottom: 0;
+      scroll-snap-align: center;
+      position: relative;
+      z-index: 1;
+      transition: none;
+      opacity: 1;
     }
     .card-title {
       font-size: 1.26em;
@@ -348,7 +347,9 @@
     }
     @media (max-width:900px){
       header { height: 44px; }
-      .logo { font-size: 1em;height:44px;padding-left:6px; }
+      .logo { font-size: 0.85em; height:44px; padding-left:6px; }
+      .main-menu { gap: 1vw; margin-left: 1vw;}
+      .menu-link { font-size:0.92em; padding: 1px 5px;}
       .pages-container { top:0;height:100vh;}
       .page{top:44px;}
       .page.fullscreen{height:100vh;min-height:100vh;max-height:100vh;}
@@ -356,9 +357,10 @@
     @media (max-width:700px){
       .splash-text { margin-top:4vh;margin-left:4vw;}
       .splash-line{font-size:1.5em;}
-      .cards-row { width: 190px; height: 190px; }
-      .card.slide-card { flex: 0 0 170px; height: 170px; padding: 20px 4vw 18px 4vw;}
-      .card-slider-btn { width: 32px; height: 32px; font-size: 1.5em;}
+      .main-menu { gap: 0.6vw;}
+      .menu-link { font-size:0.9em; padding: 1px 3px;}
+      .cards-scroll-row { gap: 16px; padding:0 4vw;}
+      .card { flex: 0 0 85vw; height: auto; min-width: 210px; padding: 20px 4vw 18px 4vw;}
     }
   </style>
 </head>
@@ -367,27 +369,24 @@
   <header>
     <div class="logo">
       <a href="https://aeoliansand.github.io/" target="_blank" rel="noopener">AEOLIAN_SAND™</a>
+      <nav class="main-menu">
+        <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">作品</a>
+        <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">新闻</a>
+        <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO-CLUB</a>
+        <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">关于</a>
+      </nav>
     </div>
   </header>
   <div class="page-indicator" id="page-indicator"></div>
   <div class="pages-container" id="pages-container"></div>
   <script>
     function getPages() {
-      const now = new Date();
-      const deadline = new Date('2025-07-01T00:00:00+08:00');
-      // 第二页三张卡片
       const cards2 = [
-        `<div class="card slide-card" data-idx="0">
+        `<div class="card">
           <div class="card-title">欢迎访问 AEOLIAN_SAND 网站。</div>
           <div class="card-content">该网站还在建设中，敬请期待！</div>
         </div>`,
-        (now < deadline ? `<div class="card slide-card" data-idx="1" id="egg-card">
-          <div class="card-title" id="egg-title">彩蛋。</div>
-          <div class="card-content" id="egg-content">
-            <span class="egg-link" id="egg-link">点击此处&gt;</span>
-          </div>
-        </div>` : ''),
-        `<div class="card slide-card" data-idx="2">
+        `<div class="card">
           <div class="card-title">见证历史。</div>
           <div class="card-content">
             2025年6月23日，见证 AEOLIAN_SAND 网站的诞生！
@@ -410,12 +409,8 @@
         // 页2
         {
           html: `<div class="page-content-outer">
-            <div class="card-slider-outer">
-              <button class="card-slider-btn left" id="card-btn-left">&lt;</button>
-              <div class="cards-row" id="cards-row">
-                ${cards2.join("")}
-              </div>
-              <button class="card-slider-btn right" id="card-btn-right">&gt;</button>
+            <div class="cards-scroll-row">
+              ${cards2.join("")}
             </div>
           </div>`
         },
@@ -520,7 +515,7 @@
     },{passive:true});
     renderDots(0);
 
-    // ====== 星空动画改进 ======
+    // ====== 星空动画及菜单颜色切换 ======
     let starfield = null;
     function getLuminance(r,g,b){
       r = r/255; g = g/255; b = b/255;
@@ -529,9 +524,23 @@
       b = b <= 0.03928 ? b/12.92 : Math.pow((b+0.055)/1.055,2.4);
       return 0.2126*r + 0.7152*g + 0.0722*b;
     }
+    function updateMenuColor(bgLuminance){
+      if(bgLuminance < 0.4){
+        // 背景较深
+        document.documentElement.style.setProperty('--menu-color', '#f6f6f8');
+        document.documentElement.style.setProperty('--menu-hover-color', '#fff9cc');
+        document.documentElement.style.setProperty('--logo-color', '#fff');
+      }else{
+        // 背景较浅
+        document.documentElement.style.setProperty('--menu-color', '#1b2340');
+        document.documentElement.style.setProperty('--menu-hover-color', '#4d7fff');
+        document.documentElement.style.setProperty('--logo-color', '#222');
+      }
+    }
     function updatePoemColor(bgLuminance){
       let color = (curPage === 0) ? "#fff" : (bgLuminance < 0.4 ? "#fff" : "#222");
       document.documentElement.style.setProperty('--splash-color', color);
+      updateMenuColor(bgLuminance);
     }
     class StarField {
       constructor(canvas, numStars) {
@@ -678,99 +687,6 @@
     window.addEventListener('DOMContentLoaded', function() {
       const canvas = document.getElementById('star-canvas');
       starfield = new StarField(canvas, window.innerWidth < 700 ? 100 : 180);
-      // ====== 卡片滑动（第二页功能）======
-      setTimeout(function(){
-        const cardsRow = document.getElementById('cards-row');
-        if (!cardsRow) return;
-        const cards = cardsRow.querySelectorAll('.card');
-        const btnLeft = document.getElementById('card-btn-left');
-        const btnRight = document.getElementById('card-btn-right');
-        let curCard = 0;
-        function updateCards() {
-          cards.forEach((card, idx) => {
-            if(idx === curCard){
-              card.style.transform = 'translateX(0) scale(1)';
-              card.style.opacity = 1;
-              card.style.zIndex = 2;
-            } else if(idx < curCard){
-              card.style.transform = 'translateX(-120%) scale(0.9)';
-              card.style.opacity = 0.5;
-              card.style.zIndex = 1;
-            } else {
-              card.style.transform = 'translateX(120%) scale(0.9)';
-              card.style.opacity = 0.5;
-              card.style.zIndex = 1;
-            }
-          });
-          btnLeft.disabled = (curCard === 0);
-          btnRight.disabled = (curCard === cards.length - 1);
-        }
-        updateCards();
-
-        btnLeft.addEventListener('click', function() {
-          if(curCard > 0){
-            curCard--;
-            updateCards();
-          }
-        });
-        btnRight.addEventListener('click', function() {
-          if(curCard < cards.length - 1){
-            curCard++;
-            updateCards();
-          }
-        });
-
-        // 触控板/手机滑动
-        let cardStartX = null;
-        cardsRow.addEventListener('touchstart', function(e){
-          if(e.touches.length===1) cardStartX = e.touches[0].clientX;
-        },{passive:true});
-        cardsRow.addEventListener('touchend', function(e){
-          if(cardStartX===null) return;
-          const endX = (e.changedTouches && e.changedTouches[0].clientX) || 0;
-          if(cardStartX-endX > 40 && curCard < cards.length-1){
-            curCard++;
-            updateCards();
-          }else if(endX-cardStartX > 40 && curCard > 0){
-            curCard--;
-            updateCards();
-          }
-          cardStartX = null;
-        },{passive:true});
-        // 笔记本触控板（wheel）
-        cardsRow.addEventListener('wheel', function(e){
-          if(e.deltaX > 30 && curCard < cards.length-1){
-            curCard++;
-            updateCards();
-          }else if(e.deltaX < -30 && curCard > 0){
-            curCard--;
-            updateCards();
-          }
-        },{passive:false});
-      }, 200);
-
-      // ====== 彩蛋计数器 ======
-      const eggLink = document.getElementById('egg-link');
-      const eggTitle = document.getElementById('egg-title');
-      const eggContent = document.getElementById('egg-content');
-      if(eggLink && eggTitle && eggContent){
-        let revealed = false;
-        eggLink.addEventListener('click', function() {
-          if (revealed) return;
-          revealed = true;
-          fetch('https://api.countapi.xyz/hit/aeoliansand.github.io/egg')
-            .then(r => r.json())
-            .then(data => {
-              const count = data.value;
-              eggTitle.textContent = "你打开了新大陆。";
-              eggContent.innerHTML = `你是第${count}个访问AEOLIAN_SAND网站的人`;
-            })
-            .catch(() => {
-              eggTitle.textContent = "你打开了新大陆。";
-              eggContent.innerHTML = "你是第1个访问AEOLIAN_SAND网站的人";
-            });
-        });
-      }
     });
   </script>
 </body>
