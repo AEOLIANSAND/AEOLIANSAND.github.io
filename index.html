@@ -24,7 +24,7 @@
       height: 56px;
       position: fixed;
       top: 0; left: 0;
-      z-index: 10;
+      z-index: 100;
       background: rgba(30,32,43,0.40);
       backdrop-filter: blur(18px) saturate(180%);
       box-shadow: 0 2px 16px 0 rgba(0,0,0,0.09);
@@ -52,7 +52,7 @@
     .main-menu {
       display: flex;
       gap: 2vw;
-      margin-left: 3vw;
+      margin-left: auto;
     }
     .menu-link {
       font-size: 1em;
@@ -75,7 +75,6 @@
       color: var(--menu-hover-color, #fff9cc);
       background: rgba(77,127,255,0.11);
     }
-
     .page-indicator {
       position: fixed;
       right: 3vw;
@@ -127,6 +126,7 @@
       z-index: 2;
       background: transparent;
       touch-action: pan-y;
+      pointer-events: auto;
     }
     .page {
       left: 0;
@@ -170,14 +170,23 @@
       overflow: hidden;
       z-index: 2;
     }
-    .fullscreen .page-content-outer {
+    /* 让内容不遮住header和footer */
+    .page-content-outer {
       width: 100vw;
-      height: 100vh;
+      min-height: calc(100vh - 56px - 80px); /* header + footer */
+      height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      pointer-events: none;
+      pointer-events: auto;
+      box-sizing: border-box;
+      padding-top: 56px;
+      padding-bottom: 80px;
+    }
+    .fullscreen .page-content-outer {
+      padding-top: 56px;
+      padding-bottom: 80px;
     }
     .fullscreen .splash-text {
       margin: 0 0 0 0;
@@ -206,16 +215,6 @@
       transition: color 0.4s;
     }
 
-    .page-content-outer {
-      width: 100vw;
-      height: 100vh;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      pointer-events: none;
-    }
     .cards-scroll-row {
       display: flex;
       flex-direction: row;
@@ -291,6 +290,10 @@
       flex-direction: column;
     }
     footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
       background: rgba(30,32,43,0.20);
       backdrop-filter: blur(10px) saturate(150%);
       color: #d0d0e8;
@@ -299,9 +302,9 @@
       font-size: 1em;
       letter-spacing: 1px;
       border-top: 1px solid #222c35;
-      width: 100vw;
       margin: 0;
-      flex-shrink: 0;
+      z-index: 101;
+      box-sizing: border-box;
     }
     .footer-links {
       font-size: 0.99em;
@@ -348,11 +351,10 @@
     @media (max-width:900px){
       header { height: 44px; }
       .logo { font-size: 0.85em; height:44px; padding-left:6px; }
-      .main-menu { gap: 1vw; margin-left: 1vw;}
+      .main-menu { gap: 1vw; margin-left: auto;}
       .menu-link { font-size:0.92em; padding: 1px 5px;}
       .pages-container { top:0;height:100vh;}
       .page{top:44px;}
-      .page.fullscreen{height:100vh;min-height:100vh;max-height:100vh;}
     }
     @media (max-width:700px){
       .splash-text { margin-top:4vh;margin-left:4vw;}
@@ -379,6 +381,21 @@
   </header>
   <div class="page-indicator" id="page-indicator"></div>
   <div class="pages-container" id="pages-container"></div>
+  <div class="footer-outer"><footer>
+    <div class="footer-links">
+      <div class="footer-title">相关网站</div>
+      <ul>
+        <li>
+          <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
+        </li>
+        <li>
+          <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
+        </li>
+      </ul>
+      <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
+    </div>
+    <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
+  </footer></div>
   <script>
     function getPages() {
       const cards2 = [
@@ -414,24 +431,9 @@
             </div>
           </div>`
         },
-        // 页3（只含footer）
+        // 页3（空白页，footer已全局固定）
         {
-          html: `<div class="page-content-outer"></div>`,
-          footer: `<div class="footer-outer"><footer>
-            <div class="footer-links">
-              <div class="footer-title">相关网站</div>
-              <ul>
-                <li>
-                  <a href="https://space.bilibili.com/1871052479?spm_id_from=333.337.0.0" target="_blank" rel="noopener">Bilibili 首页</a>
-                </li>
-                <li>
-                  <a href="https://github.com/AEOLIANSAND" target="_blank" rel="noopener">GitHub 首页</a>
-                </li>
-              </ul>
-              <div class="footer-note">注：如果无法访问 GitHub 网站，属正常现象。</div>
-            </div>
-            <p>© 2025 AEOLIAN_SAND™ 版权所有</p>
-          </footer></div>`
+          html: `<div class="page-content-outer"></div>`
         }
       ];
     }
@@ -447,7 +449,7 @@
       if (idx === 0) div.classList.add('page-in');
       else div.classList.add('page-out-down', 'page-hide');
       div.dataset.idx = idx;
-      div.innerHTML = page.html + (idx === pages.length-1 && page.footer ? page.footer : '');
+      div.innerHTML = page.html;
       if(!page.fullscreen) div.style.overflowY = 'auto';
       container.appendChild(div);
       pageElems.push(div);
@@ -526,12 +528,10 @@
     }
     function updateMenuColor(bgLuminance){
       if(bgLuminance < 0.4){
-        // 背景较深
         document.documentElement.style.setProperty('--menu-color', '#f6f6f8');
         document.documentElement.style.setProperty('--menu-hover-color', '#fff9cc');
         document.documentElement.style.setProperty('--logo-color', '#fff');
       }else{
-        // 背景较浅
         document.documentElement.style.setProperty('--menu-color', '#1b2340');
         document.documentElement.style.setProperty('--menu-hover-color', '#4d7fff');
         document.documentElement.style.setProperty('--logo-color', '#222');
@@ -548,7 +548,7 @@
         this.ctx = canvas.getContext('2d');
         this.mode = "center";
         this.targetMode = "center";
-        this.animationProgress = 0; // 0:聚集 1:散开
+        this.animationProgress = 0;
         this.numStars = numStars || 180;
         this.resize();
         this.createStars();
@@ -565,7 +565,6 @@
         this.startAnimation = performance.now();
         this.startProgress = this.animationProgress;
         this.animating = true;
-        // 每次spread都重新生成spread目标
         if (mode === "spread") {
           this.createSpreadTargets();
         }
@@ -581,8 +580,8 @@
           let x = this.centerX + r * Math.cos(angle);
           let y = this.centerY + r * Math.sin(angle);
           this.stars.push({
-            cx: x, cy: y, // 聚集初始
-            sx: x, sy: y, // spread目标
+            cx: x, cy: y,
+            sx: x, sy: y,
             r: Math.random()*1.7 + 0.5,
             speed: Math.random()*0.07 + 0.03,
             twinkle: Math.random()*Math.PI*2,
