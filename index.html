@@ -141,7 +141,7 @@
         left: 0;
         right: 0;
         width: 100vw;
-        background: rgba(0,0,0,0.85); /* 半透明纯黑色 */
+        background: rgba(0,0,0,0.85);
         border-radius: 0 0 18px 18px;
         box-shadow: 0 8px 32px 0 rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.16);
         flex-direction: row;
@@ -551,7 +551,7 @@
     <nav class="main-menu" id="main-menu">
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">作品</a>
       <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">动态</a>
-      <a href="https://aeoliansand.github.io/" class="menu-link" target="_blank" rel="noopener">AEO-CLUB</a>
+      <a href="https://aeoliansand.github.io/aeo-club.index.html" class="menu-link" target="_blank" rel="noopener">AEO-CLUB</a>
       <a href="https://aeoliansand.github.io/about.index.html" class="menu-link" target="_blank" rel="noopener">关于</a>
     </nav>
   </header>
@@ -859,34 +859,34 @@
       draw() {
         this.ctx.clearRect(0, 0, this.w, this.h);
         for(let i=0;i<this.stars.length;i++){
-          let s = this.stars[i];
+          let  = this.stars[i];
           let t = this.animationProgress;
-          let x = s.cx*(1-t) + s.sx*t;
-          let y = s.cy*(1-t) + s.sy*t;
-          let tw = 0.6 + 0.4*Math.sin(s.twinkle + Date.now()*0.0014 + i*0.6);
-          let o = s.opacity * tw;
+          let x = .cx*(1-t) + .sx*t;
+          let y = .cy*(1-t) + .sy*t;
+          let tw = 0.6 + 0.4*Math.sin(.twinkle + Date.now()*0.0014 + i*0.6);
+          let o = .opacity * tw;
           this.ctx.beginPath();
-          this.ctx.arc(x, y, s.r, 0, Math.PI*2, false);
+          this.ctx.arc(x, y, .r, 0, Math.PI*2, false);
           this.ctx.fillStyle = "rgba(255,255,255," + o + ")";
           this.ctx.shadowColor = "#fff";
           this.ctx.shadowBlur = 8 * o;
           this.ctx.fill();
           this.ctx.shadowBlur = 0;
-          s.cx += Math.cos(s.twinkle)*s.speed*0.12;
-          s.cy += Math.sin(s.twinkle)*s.speed*0.10;
-          s.sx += Math.cos(s.twinkle)*s.speed*0.12;
-          s.sy += Math.sin(s.twinkle)*s.speed*0.10;
-          if(s.cx-this.centerX>this.radius || s.cx-this.centerX<-this.radius ||
-             s.cy-this.centerY>this.radius || s.cy-this.centerY<-this.radius){
+          .cx += Math.cos(.twinkle)*.speed*0.12;
+          .cy += Math.sin(.twinkle)*.speed*0.10;
+          .sx += Math.cos(.twinkle)*.speed*0.12;
+          .sy += Math.sin(.twinkle)*.speed*0.10;
+          if(.cx-this.centerX>this.radius || .cx-this.centerX<-this.radius ||
+             .cy-this.centerY>this.radius || .cy-this.centerY<-this.radius){
             let angle=Math.random()*2*Math.PI;
             let r=Math.random()*this.radius*0.95;
-            s.cx = this.centerX+r*Math.cos(angle);
-            s.cy = this.centerY+r*Math.sin(angle);
+            .cx = this.centerX+r*Math.cos(angle);
+            .cy = this.centerY+r*Math.sin(angle);
           }
-          if(s.sx<0) s.sx=this.w;
-          if(s.sx>this.w) s.sx=0;
-          if(s.sy<0) s.sy=this.h;
-          if(s.sy>this.h) s.sy=0;
+          if(.sx<0) .sx=this.w;
+          if(.sx>this.w) .sx=0;
+          if(.sy<0) .sy=this.h;
+          if(.sy>this.h) .sy=0;
         }
       }
       animate = () => {
